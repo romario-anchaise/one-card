@@ -1,15 +1,13 @@
+import { useState } from "react";
 import {
-  ArrowDownToLine,
   ArrowUpRight,
-  BriefcaseBusiness,
   Linkedin,
   Mail,
-  MapPin,
   MessageCircle,
   Phone,
   QrCode,
   Share2,
-  Radio,
+  UserRoundPlus,
 } from "lucide-react";
 import type {
   ConnectionGateway,
@@ -23,12 +21,19 @@ const icons: Record<ContactKind, typeof Mail> = {
   email: Mail,
   linkedin: Linkedin,
 };
+const labels: Record<ContactKind, string> = {
+  whatsapp: "WhatsApp",
+  phone: "Celular",
+  email: "Correo",
+  linkedin: "LinkedIn",
+};
 export function ProfileCard({
   profile,
   gateway,
   onSave,
   onShare,
   onContact,
+  onPhysical,
   preview = false,
 }: {
   profile: ProfessionalProfile;
@@ -36,89 +41,57 @@ export function ProfileCard({
   onSave: () => void;
   onShare: () => void;
   onContact: () => void;
+  onPhysical: () => void;
   preview?: boolean;
 }) {
+  const [failedImage, setFailedImage] = useState<string | null>(null);
   return (
     <article
-      className="profile-card"
+      className="profile-card reference-profile"
       aria-label={`Tarjeta profesional de ${profile.name}`}
     >
-      <div className="card-cover">
-        <div className="cover-grain" />
-        <span className="atelier-logo">
-          {profile.company || "ONE CARD"}
-          <span>PERFIL PROFESIONAL</span>
-        </span>
-        <span className="cover-mark">
-          {(profile.company || profile.firstName).charAt(0)}
-        </span>
-        <span className="cover-tag">PEOPLE. IDEAS. POSSIBILITIES.</span>
+      <div className="profile-utility-row">
+        <span className="eyebrow">ONE CARD</span>
+        <div className="profile-tools">
+          <button
+            className="icon-button"
+            onClick={onShare}
+            aria-label="Mostrar QR del perfil"
+          >
+            <QrCode size={16} />
+          </button>
+          <button
+            className="icon-button"
+            onClick={onShare}
+            aria-label="Compartir perfil"
+          >
+            <Share2 size={15} />
+          </button>
+        </div>
       </div>
       <div className="profile-content">
-        <div className="profile-topline">
+        <div className="reference-identity">
           <div className="avatar" aria-label={`Avatar de ${profile.name}`}>
-            {profile.avatarUrl ? (
+            <span>{profile.initials}</span>
+            {profile.avatarUrl && failedImage !== profile.avatarUrl && (
               <img
                 src={profile.avatarUrl}
                 alt=""
                 referrerPolicy="no-referrer"
-                onError={(e) => {
-                  e.currentTarget.style.display = "none";
-                }}
+                onError={() => setFailedImage(profile.avatarUrl ?? null)}
               />
-            ) : (
-              profile.initials
             )}
           </div>
-          <div className="profile-tools">
-            <button
-              className="icon-button"
-              onClick={onShare}
-              aria-label="Mostrar QR del perfil"
-            >
-              <QrCode size={18} />
-            </button>
-            <button
-              className="icon-button"
-              onClick={onShare}
-              aria-label="Compartir perfil"
-            >
-              <Share2 size={17} />
-            </button>
+          <h1>{profile.name}</h1>
+          {profile.role && <p className="role">{profile.role}</p>}
+          <p className="reference-location">
+            {[profile.company, profile.location].filter(Boolean).join(" · ")}
+          </p>
+          <div className="reference-badges">
+            {profile.demo && <span>PERFIL DE EJEMPLO</span>}
+            <button onClick={onShare}>NFC + QR</button>
           </div>
         </div>
-        <div className="profile-identity">
-          <span className="eyebrow identity-label">
-            UN GUSTO CONOCERTE, SOY
-          </span>
-          <h1>
-            {profile.name}
-            <span className="name-dot">.</span>
-          </h1>
-          <p className="role">{profile.role}</p>
-          <div className="profile-meta">
-            <span>
-              <BriefcaseBusiness size={13} />
-              {profile.company}
-            </span>
-            <span className="meta-divider" />
-            <span>
-              <MapPin size={13} />
-              {profile.location}
-            </span>
-          </div>
-        </div>
-        <p className="bio">{profile.bio}</p>
-        <div className="expertise">
-          {profile.expertise.map((tag) => (
-            <span key={tag}>{tag}</span>
-          ))}
-        </div>
-        <button className="primary-button save-button" onClick={onSave}>
-          <ArrowDownToLine size={17} />
-          Guardar en contactos
-          <ArrowUpRight size={17} />
-        </button>
         <div className="contact-links">
           {profile.contacts.map((contact) => {
             const Icon = icons[contact.kind];
@@ -128,8 +101,8 @@ export function ProfileCard({
                 href={contact.href}
                 onClick={
                   profile.demo
-                    ? (e) => {
-                        e.preventDefault();
+                    ? (event) => {
+                        event.preventDefault();
                         onContact();
                       }
                     : undefined
@@ -142,34 +115,51 @@ export function ProfileCard({
                 <span className={`contact-icon ${contact.kind}`}>
                   <Icon size={19} />
                 </span>
-                {contact.label}
+                {labels[contact.kind]}
               </a>
             );
           })}
         </div>
-        <div className="section-divider">
-          <span />
-          <Radio size={15} />
-          <span />
-        </div>
+        <button className="primary-button save-button" onClick={onSave}>
+          <UserRoundPlus size={16} />
+          Guardar en Contactos (vCard)
+        </button>
         {preview ? (
           <p className="preview-contact-note">
             El formulario de contacto estará disponible en tu tarjeta publicada.
           </p>
         ) : (
-          <ConnectionForm
-            gateway={gateway}
-            profileId={profile.id}
-            recipientName={profile.firstName}
-            demo={profile.demo}
-          />
+          <div className="reference-connect">
+            <ConnectionForm
+              gateway={gateway}
+              profileId={profile.id}
+              recipientName={profile.firstName}
+              demo={profile.demo}
+              compact
+            />
+          </div>
         )}
+        {(profile.bio || profile.expertise.length > 0) && (
+          <details className="profile-about">
+            <summary>
+              Más sobre {profile.firstName}
+              <ArrowUpRight size={13} />
+            </summary>
+            {profile.bio && <p>{profile.bio}</p>}
+            <div className="expertise">
+              {profile.expertise.map((tag) => (
+                <span key={tag}>{tag}</span>
+              ))}
+            </div>
+          </details>
+        )}
+        <button className="physical-preview-link" onClick={onPhysical}>
+          Ver tarjeta física
+          <ArrowUpRight size={13} />
+        </button>
         <div className="card-footer">
-          <span>Una conexión. Infinitas posibilidades.</span>
-          <span className="small-wordmark">
-            ONE CARD
-            <ArrowUpRight size={11} />
-          </span>
+          <span>Tu identidad. En un solo toque.</span>
+          <span className="small-wordmark">R&A · ONE CARD</span>
         </div>
       </div>
     </article>

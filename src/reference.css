@@ -1,0 +1,717 @@
+/* Visual reference: the supplied R&A prototype. Keep these rules scoped where possible. */
+.physical-preview-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  width: 100%;
+  background: transparent;
+  color: #c2a772;
+  font-size: 10px;
+  min-height: 38px;
+  margin-top: 10px;
+}
+.physical-preview-link:hover {
+  color: #ecd09e;
+}
+dialog .reference-physical-card {
+  margin: 15px auto 10px;
+}
+:root {
+  background: #0e0e12;
+  --gold: #d1b27c;
+}
+.reference-theme .main-layout {
+  grid-template-columns: minmax(0, 1fr) 370px;
+  gap: 110px;
+  max-width: 1050px;
+  padding-top: 46px;
+}
+.reference-theme .intro {
+  padding-top: 35px;
+}
+.reference-theme .intro h2 {
+  font-size: 49px;
+}
+.reference-theme .profile-caption {
+  color: #8f8b86;
+}
+.reference-profile {
+  background: #0b0b0f;
+  border-color: #29292e;
+  border-radius: 23px;
+  box-shadow: 0 24px 70px #0004;
+  color: #f5f4f0;
+  overflow: hidden;
+}
+.reference-profile .profile-content {
+  padding: 0 22px;
+}
+.profile-utility-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 16px 20px 0;
+}
+.profile-utility-row > .eyebrow {
+  font-size: 8px;
+  letter-spacing: 2px;
+}
+.reference-profile .profile-tools {
+  margin: 0;
+  align-self: auto;
+  gap: 4px;
+}
+.reference-profile .profile-tools .icon-button {
+  border: 0;
+  color: #8a8790;
+  width: 28px;
+  height: 28px;
+}
+.reference-identity {
+  text-align: center;
+  padding: 12px 0 0;
+}
+.reference-identity .avatar {
+  width: 82px;
+  height: 82px;
+  border: 2px solid #c7b58a;
+  border-radius: 50%;
+  background: #24242b;
+  color: #d9c395;
+  margin: 0 auto 17px;
+  font-size: 27px;
+  overflow: hidden;
+}
+.reference-identity .avatar img {
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.reference-identity h1 {
+  font:
+    650 25px/1.2 Manrope,
+    sans-serif;
+  letter-spacing: -1px;
+  margin: 0 0 8px;
+  color: #faf9f5;
+  overflow-wrap: anywhere;
+}
+.reference-identity .role {
+  font-size: 12px;
+  color: #c0bbc5;
+  margin: 0 0 6px;
+}
+.reference-location {
+  font-size: 10px;
+  line-height: 1.7;
+  color: #8c8590;
+  margin: 0;
+}
+.reference-badges {
+  display: flex;
+  justify-content: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  margin: 13px 0 20px;
+}
+.reference-badges > span,
+.reference-badges > button {
+  font-size: 7px;
+  letter-spacing: 0.6px;
+  border: 1px solid #2c2a30;
+  border-radius: 20px;
+  padding: 6px 9px;
+  background: transparent;
+  line-height: 1;
+  color: #cdb785;
+}
+.reference-badges > button {
+  color: #a8a0b2;
+}
+.reference-profile .contact-links {
+  margin: 0;
+  gap: 8px;
+  grid-template-columns: repeat(auto-fit, minmax(55px, 1fr));
+}
+.reference-profile .contact-links a {
+  border: 1px solid #2a292f;
+  background: #141418;
+  border-radius: 12px;
+  min-height: 65px;
+  padding: 13px 3px 10px;
+  gap: 8px;
+  font-size: 8px;
+  color: #b0a8b6;
+}
+.reference-profile .contact-links a:hover {
+  border-color: #bfa474;
+  background: #1b1a1f;
+}
+.reference-profile .whatsapp {
+  color: #0acf9a;
+}
+.reference-profile .phone {
+  color: #d7bd8b;
+}
+.reference-profile .email {
+  color: #bf61e5;
+}
+.reference-profile .linkedin {
+  color: #19b0dd;
+}
+.reference-profile .save-button {
+  margin: 15px 0 18px;
+  border: 1px solid #f7f6f1;
+  border-radius: 12px;
+  background: #fafaf8;
+  color: #090a0d;
+  font-size: 11px;
+  min-height: 44px;
+  justify-content: center;
+  gap: 9px;
+  font-weight: 650;
+  padding: 12px 8px;
+}
+.reference-profile .save-button > svg:first-child {
+  margin: 0;
+}
+.reference-profile .save-button:hover {
+  background: #eae6dc;
+}
+.reference-connect {
+  border: 1px solid #27262c;
+  background: #09090c;
+  border-radius: 17px;
+  padding: 17px 15px 0;
+}
+.reference-connect .form-heading > .eyebrow {
+  font-size: 8px;
+  letter-spacing: 1.5px;
+  color: #d7ba83;
+}
+.reference-connect .form-heading p {
+  font-size: 10px;
+  line-height: 1.7;
+  color: #9a92a3;
+  margin: 9px 0 15px;
+}
+.reference-connect .field-row {
+  grid-template-columns: 1fr;
+  gap: 0;
+}
+.reference-connect .field {
+  margin-bottom: 11px;
+  gap: 6px;
+}
+.reference-connect .field label {
+  font-size: 9px;
+  color: #ada3b7;
+  font-weight: 400;
+}
+.reference-connect .field input,
+.reference-connect .field textarea {
+  background: #141417;
+  border: 1px solid #323038;
+  border-radius: 7px;
+  min-height: 38px;
+  font-size: 12px;
+  padding: 10px 11px;
+  color: #e6e0ed;
+}
+.reference-connect .field input::placeholder,
+.reference-connect .field textarea::placeholder {
+  color: #8e849c;
+  font-size: 11px;
+}
+.reference-connect .field input:focus-visible,
+.reference-connect .field textarea:focus-visible {
+  outline: 1px solid #d1b27c;
+  outline-offset: 0;
+  border-color: #d1b27c;
+}
+.optional-message {
+  margin: 2px 0 13px;
+}
+.optional-message > summary {
+  font-size: 9px;
+  color: #a89ab6;
+  cursor: pointer;
+  padding: 5px 0;
+}
+.optional-message > .field {
+  margin-top: 10px;
+}
+.reference-connect .consent {
+  font-size: 8px;
+  line-height: 1.7;
+  color: #a69bac;
+  gap: 7px;
+  margin-top: 6px;
+}
+.reference-connect .consent input {
+  accent-color: #d1b27c;
+  margin-top: 2px;
+  min-width: 12px;
+}
+.reference-connect .send-button {
+  margin-top: 14px;
+  min-height: 39px;
+  border-radius: 8px;
+  justify-content: center;
+  background: #fafaf8;
+  border-color: #fafaf8;
+  color: #0b0b0f;
+  font-size: 11px;
+}
+.reference-connect .privacy-note {
+  font-size: 7px;
+  line-height: 1.7;
+  color: #9b8ea5;
+  margin: 10px 0 14px;
+  text-align: center;
+  align-items: flex-start;
+}
+.reference-connect .privacy-note > svg {
+  width: 10px;
+  margin-top: 1px;
+}
+.reference-connect .form-receipt {
+  padding: 15px 0 22px;
+}
+.reference-connect .form-receipt h3 {
+  font-size: 16px;
+}
+.reference-connect .form-receipt p {
+  font-size: 11px;
+  color: #a89ab4;
+}
+.profile-about {
+  margin: 19px 0 0;
+  border-top: 1px solid #232129;
+  padding-top: 13px;
+}
+.profile-about > summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 10px;
+  color: #afa2bb;
+  cursor: pointer;
+  padding: 5px 0;
+  list-style: none;
+}
+.profile-about > summary::-webkit-details-marker {
+  display: none;
+}
+.profile-about > p {
+  font-size: 11px;
+  line-height: 1.9;
+  color: #a89ab4;
+  margin: 13px 0;
+}
+.reference-profile .expertise {
+  margin-bottom: 12px;
+}
+.reference-profile .expertise > span {
+  background: #15121a;
+  border-color: #302738;
+  color: #b4a4bf;
+  font-size: 7px;
+}
+.reference-profile .card-footer {
+  color: #8c8295;
+  font-size: 7px;
+  border-color: #232129;
+  margin-top: 12px;
+  padding: 15px 0;
+}
+.reference-profile .small-wordmark {
+  font-size: 6px;
+  color: #bca980;
+  letter-spacing: 1px;
+}
+.reference-profile .preview-contact-note {
+  font-size: 10px;
+  line-height: 1.8;
+  padding: 15px;
+  border: 1px solid #28232e;
+  border-radius: 10px;
+  background: #100d14;
+  color: #a89ab4;
+  margin-bottom: 0;
+}
+.reference-theme .physical-scene {
+  height: 265px;
+  perspective: none;
+  margin-top: 34px;
+  justify-items: start;
+}
+.reference-physical-card {
+  width: 360px;
+  max-width: 100%;
+  aspect-ratio: 1.586;
+  padding: 28px;
+  position: relative;
+  border-radius: 21px;
+  background: linear-gradient(120deg, #303034 0%, #1c1c1f 58%, #151518 100%);
+  border-top: 1px solid #444449;
+  border-left: 1px solid #36363b;
+  box-shadow: 0 22px 38px #0005;
+  color: #e9e3d7;
+  text-align: left;
+}
+.physical-brand {
+  font-size: 15px;
+  letter-spacing: 3px;
+  color: #cfb17e;
+  font-weight: 700;
+  line-height: 1.2;
+}
+.physical-brand > span {
+  display: block;
+  font-size: 8px;
+  letter-spacing: 2px;
+  color: #a69d89;
+  margin: 8px 0 9px;
+}
+.physical-brand > i {
+  display: block;
+  width: 42px;
+  height: 1px;
+  background: #c4a775;
+}
+.physical-owner {
+  position: absolute;
+  bottom: 28px;
+  left: 28px;
+  right: 85px;
+}
+.physical-owner > strong {
+  display: block;
+  font:
+    650 22px/1.2 Manrope,
+    sans-serif;
+  letter-spacing: -1px;
+  overflow-wrap: anywhere;
+}
+.physical-owner > span {
+  display: block;
+  color: #d1b47f;
+  font-size: 8px;
+  letter-spacing: 1.8px;
+  text-transform: uppercase;
+  margin: 9px 0 7px;
+  line-height: 1.5;
+}
+.physical-owner > small {
+  font-size: 12px;
+  color: #bcb5a7;
+}
+.physical-gold-chip {
+  width: 46px;
+  height: 30px;
+  position: absolute;
+  right: 28px;
+  bottom: 28px;
+  border-radius: 4px;
+  background: linear-gradient(
+    130deg,
+    #c9a76a 0%,
+    #ead6b0 30%,
+    #fff3d7 50%,
+    #d5b77f 100%
+  );
+  box-shadow: inset 0 0 0 1px #fff2;
+}
+.reference-theme .scene-caption {
+  bottom: 0;
+  left: 0;
+  font-size: 7px;
+  letter-spacing: 1.6px;
+  color: #8d8498;
+}
+.reference-theme .intro-benefits {
+  color: #a099a8;
+}
+.reference-theme .intro-footnote {
+  color: #8a8095;
+}
+.reference-theme .powered-by {
+  color: #8c8196;
+}
+.reference-theme .site-footer {
+  color: #92859c;
+}
+.reference-theme .intro-description {
+  color: #d0cbd6;
+}
+.reference-theme .intro-detail {
+  color: #9a90a4;
+}
+.reference-theme .site-header {
+  border-color: #27222d;
+}
+.blank-card {
+  background: linear-gradient(135deg, #303034, #18181c);
+  color: #ede6d8;
+  border: 1px solid #49444a;
+}
+.blank-card p {
+  color: #a99fae;
+}
+.blank-monogram {
+  color: #d1b27c;
+  border-color: #d1b27c50;
+}
+.blank-card-top,
+.blank-card-bottom {
+  color: #d1b27c;
+}
+.mini-card {
+  background: linear-gradient(130deg, #303034, #17171b);
+  border: 1px solid #4a4148;
+  color: #d9c599;
+}
+.mini-card > strong {
+  color: #e8e0d5;
+}
+.metric-card,
+.activity-panel,
+.card-shortcut,
+.contacts-panel,
+.editor-section {
+  background: #17161b;
+}
+.editor-main .field input,
+.editor-main .field textarea,
+.auth-fields .field input {
+  background: #101014;
+  border-color: #302b37;
+}
+.workspace-nav.active {
+  background: #d1b27c0c;
+}
+.workspace-sidebar,
+.workspace-main {
+  color: #b9adbf;
+}
+body:has(.reference-theme) dialog {
+  background: #151219;
+}
+@media (min-width: 1500px) {
+  .reference-theme .main-layout {
+    grid-template-columns: minmax(0, 1fr) 380px;
+    max-width: 1120px;
+    gap: 140px;
+    padding-top: 55px;
+  }
+  .reference-theme .intro h2 {
+    font-size: 55px;
+  }
+  .reference-theme .intro {
+    padding-top: 50px;
+  }
+}
+@media (max-width: 1150px) {
+  .reference-theme .main-layout {
+    grid-template-columns: minmax(0, 1fr) 350px;
+    gap: 55px;
+  }
+  .reference-theme .intro h2 {
+    font-size: 40px;
+  }
+  .reference-physical-card {
+    width: 325px;
+    padding: 24px;
+  }
+  .physical-owner {
+    left: 24px;
+    bottom: 24px;
+  }
+  .physical-owner > strong {
+    font-size: 20px;
+  }
+  .physical-gold-chip {
+    right: 24px;
+    bottom: 24px;
+  }
+  .reference-theme .physical-scene {
+    height: 245px;
+  }
+}
+@media (max-width: 900px) {
+  .reference-theme .main-layout {
+    grid-template-columns: minmax(0, 1fr) 330px;
+    gap: 30px;
+  }
+  .reference-theme .intro h2 {
+    font-size: 33px;
+  }
+  .reference-physical-card {
+    width: 265px;
+    padding: 20px;
+    border-radius: 16px;
+  }
+  .physical-brand {
+    font-size: 11px;
+    letter-spacing: 2px;
+  }
+  .physical-brand > span {
+    font-size: 6px;
+    margin-top: 6px;
+  }
+  .physical-owner {
+    left: 20px;
+    bottom: 20px;
+    right: 65px;
+  }
+  .physical-owner > strong {
+    font-size: 17px;
+  }
+  .physical-owner > span {
+    font-size: 6px;
+    letter-spacing: 1.1px;
+    margin: 6px 0;
+  }
+  .physical-owner > small {
+    font-size: 10px;
+  }
+  .physical-gold-chip {
+    width: 34px;
+    height: 23px;
+    right: 20px;
+    bottom: 20px;
+  }
+  .reference-theme .physical-scene {
+    height: 220px;
+  }
+  .reference-profile .profile-content {
+    padding: 0 19px;
+  }
+}
+@media (max-width: 740px) {
+  .reference-theme {
+    padding: 0 18px;
+    max-width: 430px;
+  }
+  .reference-theme .main-layout {
+    display: block;
+    padding-top: 24px;
+  }
+  .reference-theme .profile-column {
+    max-width: 370px;
+    margin: 0 auto;
+  }
+  .reference-theme .profile-caption {
+    font-size: 7px;
+    letter-spacing: 1.5px;
+  }
+  .reference-profile {
+    border-radius: 21px;
+  }
+  .reference-profile .profile-content {
+    padding: 0 18px;
+  }
+  .profile-utility-row {
+    padding: 13px 16px 0;
+  }
+  .reference-identity {
+    padding-top: 7px;
+  }
+  .reference-identity .avatar {
+    width: 76px;
+    height: 76px;
+    margin-bottom: 15px;
+  }
+  .reference-identity h1 {
+    font-size: 24px;
+  }
+  .reference-identity .role {
+    font-size: 12px;
+  }
+  .reference-location {
+    font-size: 10px;
+  }
+  .reference-badges {
+    margin: 12px 0 20px;
+  }
+  .reference-badges > span,
+  .reference-badges > button {
+    font-size: 7px;
+    min-height: 25px;
+    padding: 8px 9px;
+  }
+  .reference-profile .contact-links a {
+    font-size: 8px;
+    min-height: 62px;
+    padding: 12px 3px 10px;
+    border-radius: 12px;
+  }
+  .reference-profile .save-button {
+    min-height: 45px;
+    font-size: 11px;
+    margin: 14px 0 18px;
+  }
+  .reference-connect {
+    padding: 16px 14px 0;
+  }
+  .reference-connect .form-heading p {
+    font-size: 10px;
+  }
+  .reference-connect .field input,
+  .reference-connect .field textarea {
+    font-size: 16px;
+    min-height: 42px;
+    padding: 10px;
+  }
+  .reference-connect .field input::placeholder,
+  .reference-connect .field textarea::placeholder {
+    font-size: 12px;
+  }
+  .reference-connect .field label {
+    font-size: 9px;
+  }
+  .reference-connect .field {
+    margin-bottom: 12px;
+  }
+  .reference-connect .consent {
+    font-size: 9px;
+    line-height: 1.7;
+  }
+  .reference-connect .consent input {
+    width: 13px;
+    height: 13px;
+    min-width: 13px;
+  }
+  .reference-connect .send-button {
+    min-height: 44px;
+    font-size: 12px;
+  }
+  .reference-connect .privacy-note {
+    font-size: 8px;
+  }
+  .reference-theme .site-header {
+    height: 70px;
+  }
+  .reference-theme .powered-by {
+    margin-top: 17px;
+    font-size: 6px;
+  }
+  .profile-about > summary {
+    min-height: 35px;
+  }
+  .reference-theme .site-footer {
+    font-size: 8px;
+  }
+  .reference-theme .intro {
+    display: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .reference-physical-card {
+    animation: none;
+  }
+}

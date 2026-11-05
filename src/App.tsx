@@ -7,7 +7,6 @@ import {
   CreditCard,
   Fingerprint,
   Globe2,
-  MoveUpRight,
   Radio,
   ShieldCheck,
   Sparkles,
@@ -18,6 +17,7 @@ import type { ConnectionGateway, ProfessionalProfile } from "./domain/profile";
 import { createVCard } from "./application/profile-services";
 import { downloadFile } from "./infrastructure/browser";
 import { ProfileCard } from "./components/ProfileCard";
+import { PhysicalCard } from "./components/PhysicalCard";
 import { Modal } from "./components/Modal";
 export function App({
   profile,
@@ -28,7 +28,9 @@ export function App({
   connectionGateway: ConnectionGateway;
   preview?: boolean;
 }) {
-  const [modal, setModal] = useState<"share" | "about" | null>(null);
+  const [modal, setModal] = useState<"share" | "about" | "physical" | null>(
+    null,
+  );
   const [notice, setNotice] = useState("");
   const [copied, setCopied] = useState(false);
   const qrRef = useRef<HTMLDivElement>(null);
@@ -75,7 +77,7 @@ export function App({
       >
         Ir a la tarjeta
       </a>
-      <div className="page-shell">
+      <div className="page-shell reference-theme">
         <header className="site-header">
           <a className="brand" href="#/" aria-label="ONE CARD, inicio">
             <span className="brand-icon">
@@ -131,26 +133,7 @@ export function App({
                 </span>
               </button>
               <div className="physical-scene" aria-hidden="true">
-                <div className="physical-shadow" />
-                <div className="physical-card">
-                  <div className="physical-top">
-                    <span>ONE CARD</span>
-                    <Radio size={22} />
-                  </div>
-                  <div className="chip">
-                    <span />
-                    <span />
-                    <span />
-                  </div>
-                  <div className="physical-name">
-                    {profile.name}
-                    <span>{profile.company}</span>
-                  </div>
-                  <div className="physical-bottom">
-                    <span>YOUR NEXT CONNECTION.</span>
-                    <MoveUpRight size={16} />
-                  </div>
-                </div>
+                <PhysicalCard profile={profile} />
                 <div className="scene-caption">
                   <span />
                   DISEÑADA PARA DEJAR HUELLA
@@ -188,6 +171,7 @@ export function App({
               gateway={connectionGateway}
               preview={preview}
               onSave={saveContact}
+              onPhysical={() => setModal("physical")}
               onShare={() => {
                 if (preview) {
                   setNotice(
@@ -264,6 +248,14 @@ export function App({
               Descargar QR
             </button>
           </div>
+        </Modal>
+      )}
+      {modal === "physical" && (
+        <Modal title="Tu ONE CARD" onClose={() => setModal(null)}>
+          <p className="modal-description">
+            Un diseño que lleva tu identidad del mundo físico al digital.
+          </p>
+          <PhysicalCard profile={profile} />
         </Modal>
       )}
       {modal === "about" && (

@@ -7,11 +7,13 @@ export function ConnectionForm({
   profileId,
   recipientName,
   demo = false,
+  compact = false,
 }: {
   gateway: ConnectionGateway;
   profileId: string;
   recipientName: string;
   demo?: boolean;
+  compact?: boolean;
 }) {
   const [values, setValues] = useState<ConnectionRequest>({
     name: "",
@@ -54,13 +56,21 @@ export function ConnectionForm({
   return (
     <form onSubmit={submit} noValidate>
       <div className="form-heading">
-        <span className="eyebrow">HAGAMOS CONEXIÓN</span>
-        <h3>
-          Las buenas ideas empiezan
-          <br />
-          con una conversación.
-        </h3>
-        <p>Déjame tus datos y encontremos un punto en común.</p>
+        <span className="eyebrow">
+          {compact ? "CONECTAR DE VUELTA" : "HAGAMOS CONEXIÓN"}
+        </span>
+        {!compact && (
+          <h3>
+            Las buenas ideas empiezan
+            <br />
+            con una conversación.
+          </h3>
+        )}
+        <p>
+          {compact
+            ? "Deja tu nombre y correo para seguir en contacto."
+            : "Déjame tus datos y encontremos un punto en común."}
+        </p>
       </div>
       <div className="field-row">
         <div className="field">
@@ -71,7 +81,7 @@ export function ConnectionForm({
             id="name"
             name="name"
             autoComplete="name"
-            placeholder="¿Cómo te llamas?"
+            placeholder={compact ? "Tu nombre" : "¿Cómo te llamas?"}
             maxLength={100}
             required
             value={values.name}
@@ -94,7 +104,7 @@ export function ConnectionForm({
             name="email"
             type="email"
             autoComplete="email"
-            placeholder="hola@tuempresa.com"
+            placeholder={compact ? "Tu correo" : "hola@tuempresa.com"}
             maxLength={254}
             required
             value={values.email}
@@ -109,20 +119,23 @@ export function ConnectionForm({
           )}
         </div>
       </div>
-      <div className="field">
-        <label htmlFor="message">
-          ¿Qué tienes en mente? <span className="optional">Opcional</span>
-        </label>
-        <textarea
-          id="message"
-          name="message"
-          placeholder="Una idea, un proyecto o simplemente un hola…"
-          maxLength={500}
-          rows={3}
-          value={values.message}
-          onChange={(e) => setValues({ ...values, message: e.target.value })}
-        />
-      </div>
+      <details className="optional-message" open={compact ? undefined : true}>
+        <summary>Agregar un mensaje (opcional)</summary>
+        <div className="field">
+          <label htmlFor="message">
+            ¿Qué tienes en mente? <span className="optional">Opcional</span>
+          </label>
+          <textarea
+            id="message"
+            name="message"
+            placeholder="Una idea, un proyecto o simplemente un hola…"
+            maxLength={500}
+            rows={3}
+            value={values.message}
+            onChange={(e) => setValues({ ...values, message: e.target.value })}
+          />
+        </div>
+      </details>
       <label className="consent">
         <input
           type="checkbox"
@@ -152,8 +165,12 @@ export function ConnectionForm({
         disabled={pending}
         type="submit"
       >
-        {pending ? "Enviando…" : `Conectar con ${recipientName}`}
-        <ArrowUpRight size={18} />
+        {pending
+          ? "Enviando…"
+          : compact
+            ? "Enviar mis datos"
+            : `Conectar con ${recipientName}`}
+        {!compact && <ArrowUpRight size={18} />}
       </button>
       <p className="privacy-note">
         <LockKeyhole size={12} />{" "}

@@ -33,11 +33,13 @@ src/
   components/
     Brand.tsx                         Identidad visual y enlace al inicio
     ProfileCard.tsx                   Tarjeta reutilizable basada en props
+    PhysicalCard.tsx                  Tarjeta física negra fiel al prototipo
     ConnectionForm.tsx                Formulario y estados de envío
     Modal.tsx                         Diálogo nativo, Escape y foco confinado
   styles.css                          Diseño de tarjeta y base visual
   workspace.css                       Inicio, acceso y editor
   demo.css                            Panel, contactos y animaciones
+  reference.css                       Ajustes visuales fieles al prototipo R&A
 ```
 
 ## Rutas de la demo
@@ -136,6 +138,8 @@ No se han añadido clases, herencia ni una capa por cada función solo para apar
 Paleta oscura con acentos dorados, componentes adaptables, botones táctiles, foco visible, etiquetas, errores asociados, diálogos con teclado y animaciones reducidas cuando el sistema lo pide. Las fuentes externas tienen alternativas del sistema.
 
 Los tiempos de simulación viven en `demo-services.ts`; las animaciones de entrada, gráfica y confirmación en `demo.css`. Los estados vacíos de búsqueda y perfil inexistente se pueden abrir navegando o buscando una cadena que no coincida.
+
+La tarjeta sigue la referencia visual de R&A: negro y dorado, foto centrada, canales de contacto, vCard blanca y formulario «Conectar de vuelta». `reference.css` contiene estos ajustes. `PhysicalCard` se reutiliza en escritorio y en el diálogo móvil. La fotografía ilustrativa está en `public/demo-avatar.jpg` ([fuente de imagen en Unsplash](https://images.unsplash.com/photo-1580489944761-15a19d654956)); no representa una cuenta real.
 
 ## Verificación y entrega
 

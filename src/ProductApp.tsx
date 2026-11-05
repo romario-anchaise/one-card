@@ -18,6 +18,7 @@ import {
   demoConnectionGateway,
 } from "./infrastructure/demo-services";
 import { toProfessionalProfile } from "./application/workspace-services";
+import { demoAvatarUrl } from "./infrastructure/demo-data";
 import { Welcome } from "./pages/Welcome";
 import { Access } from "./pages/Access";
 import { Editor } from "./pages/Editor";
@@ -126,6 +127,9 @@ function Preview({ store }: { store: ProfileStore }) {
               ? {
                   ...toProfessionalProfile(value.draft),
                   demo: store.mode === "demo",
+                  avatarUrl:
+                    value.draft.avatarUrl ||
+                    (store.mode === "demo" ? demoAvatarUrl : undefined),
                 }
               : null,
           );

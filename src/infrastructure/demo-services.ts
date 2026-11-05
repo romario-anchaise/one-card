@@ -4,7 +4,7 @@ import {
   toProfessionalProfile,
   validateDraft,
 } from "../application/workspace-services";
-import { demoDraft } from "./demo-data";
+import { demoDraft, demoAvatarUrl } from "./demo-data";
 export const demoConnectionGateway: ConnectionGateway = {
   async send() {
     await new Promise((resolve) => setTimeout(resolve, 650));
@@ -47,7 +47,11 @@ export function createDemoProfileStore(): ProfileStore {
     async getPublished(slug) {
       await new Promise((resolve) => setTimeout(resolve, 400));
       if (slug !== record.draft.slug) return null;
-      return { ...toProfessionalProfile(record.draft), demo: true };
+      return {
+        ...toProfessionalProfile(record.draft),
+        avatarUrl: record.draft.avatarUrl || demoAvatarUrl,
+        demo: true,
+      };
     },
   };
 }

@@ -1,4 +1,5 @@
 import type { ProfileDraft } from "../domain/workspace";
+export const demoAvatarUrl = "/demo-avatar.jpg";
 /** Illustrative fixtures, never actual users, analytics, or contacts. */
 export const demoDraft: ProfileDraft = {
   id: "e5b9e38a-32ec-4b81-a674-5ebcbfd5c5db",
