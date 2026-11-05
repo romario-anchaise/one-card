@@ -1,0 +1,83 @@
+:root {
+  --control-target: 44px;
+  --control-radius: 14px;
+}
+
+:is(.primary-button, .secondary-button, .google-button, .header-account) {
+  min-height: var(--control-target);
+  border-radius: var(--control-radius);
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.25;
+  text-align: center;
+}
+
+:is(.icon-button, .theme-control > summary) {
+  min-width: var(--control-target);
+  min-height: var(--control-target);
+  border-radius: var(--control-radius);
+}
+
+:is(.text-button, .physical-preview-link, .preview-toolbar a, .workspace-nav,
+    .theme-menu > label, .welcome-secondary > a, .restore-profile .file-action) {
+  min-height: var(--control-target);
+  align-items: center;
+}
+
+.minimal-public .physical-preview-link,
+.welcome-secondary > a {
+  display: inline-flex;
+  justify-content: center;
+}
+
+.minimal-public .profile-tools .icon-button,
+.reference-profile .contact-links a {
+  border-radius: var(--control-radius);
+  font-size: 0.8125rem;
+}
+
+.reference-profile .contact-links a {
+  min-height: 56px;
+}
+
+.minimal-public .save-button,
+.minimal-public .send-button {
+  min-height: 50px;
+  border-radius: var(--control-radius);
+  font-size: 0.875rem;
+}
+
+.modal-actions {
+  flex-wrap: wrap;
+}
+
+.modal-actions > button {
+  flex: 1 1 auto;
+  font-size: 0.875rem;
+}
+
+.editable-link {
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.3fr);
+}
+
+.link-order-actions {
+  grid-column: 1 / -1;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding-bottom: 0;
+}
+
+.link-order-actions .icon-button {
+  border: 1px solid var(--theme-menu-border);
+}
+
+.link-order-actions .icon-button[aria-pressed="true"] {
+  background: var(--theme-menu-hover);
+}
+
+@media (max-width: 540px) {
+  .editable-link {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

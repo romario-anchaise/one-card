@@ -9,6 +9,7 @@ import "./reference.css";
 import "./functionality.css";
 import "./minimal.css";
 import "./themes.css";
+import "./controls.css";
 initializeTheme();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
