@@ -1,6 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import {
-  HashRouter,
+  createHashRouter,
+  RouterProvider,
   Link,
   Navigate,
   Route,
@@ -114,7 +115,7 @@ function PublicProfile({
           <ArrowLeft size={15} />
           Explorar panel
         </Link>
-        <span>INTERFAZ DE EJEMPLO · DATOS FICTICIOS</span>
+        <span>DEMO</span>
       </div>
       <App profile={profile} connectionGateway={gateway} />
     </>
@@ -184,7 +185,7 @@ function ScrollToTop() {
   }, [pathname]);
   return null;
 }
-export function ProductApp() {
+function ProductRoutes() {
   const [currentDemoDraft, setCurrentDemoDraft] = useState(() =>
     structuredClone(demoDraft),
   );
@@ -227,7 +228,7 @@ export function ProductApp() {
   );
   const demo = useMemo(() => createDemoProfileStore(setCurrentDemoDraft), []);
   return (
-    <HashRouter>
+    <>
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Welcome />} />
@@ -287,6 +288,10 @@ export function ProductApp() {
           element={<StatePage title="No encontramos esta página." />}
         />
       </Routes>
-    </HashRouter>
+    </>
   );
+}
+const router = createHashRouter([{ path: "/*", element: <ProductRoutes /> }]);
+export function ProductApp() {
+  return <RouterProvider router={router} />;
 }

@@ -1,0 +1,399 @@
+.minimal-header {
+  min-height: 68px;
+  display: flex;
+  align-items: center;
+  border-bottom: 1px solid #ffffff0c;
+}
+.minimal-profile-layout {
+  display: grid;
+  grid-template-columns: 360px 360px;
+  gap: 100px;
+  justify-content: center;
+  align-items: start;
+  padding: 38px 0 50px;
+}
+.physical-showcase {
+  padding-top: 60px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 22px;
+}
+.physical-showcase > span {
+  font-size: 9px;
+  letter-spacing: 2px;
+  color: #a598ae;
+}
+.minimal-public .profile-column {
+  width: 100%;
+  min-width: 0;
+}
+.minimal-public .profile-utility-row {
+  justify-content: flex-end;
+  padding-top: 10px;
+}
+.minimal-public .profile-tools .icon-button {
+  width: auto;
+  min-height: 40px;
+  display: flex;
+  gap: 7px;
+  font-size: 10px;
+  padding: 8px;
+}
+.minimal-public .reference-identity {
+  padding-top: 0;
+}
+.minimal-public .reference-identity .avatar {
+  width: 76px;
+  height: 76px;
+  margin-bottom: 15px;
+}
+.minimal-public .reference-location {
+  margin-bottom: 23px;
+}
+.minimal-public .reference-connect {
+  padding-top: 15px;
+}
+.minimal-public .physical-preview-link {
+  font-size: 10px;
+  margin: 8px 0;
+}
+.minimal-public .profile-about {
+  margin-top: 13px;
+  padding-top: 8px;
+}
+.minimal-public .profile-content {
+  padding-bottom: 13px;
+}
+.minimal-public .reference-connect .consent {
+  min-height: 44px;
+  align-items: center;
+}
+.minimal-public .profile-card {
+  animation: none;
+}
+.qr-frame {
+  margin-top: 22px;
+  margin-bottom: 22px;
+}
+.share-url {
+  margin-top: 18px;
+}
+.minimal-welcome {
+  min-height: 100vh;
+}
+.minimal-welcome > main {
+  max-width: 480px;
+  margin: 90px auto 60px;
+}
+.minimal-welcome h1 {
+  font:
+    550 58px/1.12 Manrope,
+    sans-serif;
+  letter-spacing: -3px;
+  margin: 0 0 23px;
+}
+.minimal-welcome h1 span {
+  color: var(--gold);
+}
+.minimal-welcome p {
+  font-size: 15px;
+  color: #b5aabd;
+  line-height: 1.8;
+  margin-bottom: 32px;
+}
+.minimal-welcome .primary-button {
+  justify-content: space-between;
+  padding: 15px 18px;
+  max-width: 300px;
+  font-size: 13px;
+}
+.minimal-welcome .welcome-secondary {
+  margin: 22px 0 32px;
+}
+.minimal-welcome small {
+  color: #9c8eaa;
+  font-size: 10px;
+}
+.minimal-workspace .workspace-header {
+  height: 76px;
+}
+.minimal-workspace .workspace-layout {
+  padding-top: 30px;
+  gap: 40px;
+}
+.minimal-workspace .workspace-sidebar {
+  padding-top: 0;
+}
+.minimal-workspace .dashboard-heading,
+.minimal-workspace .editor-heading {
+  margin-bottom: 15px;
+  min-height: 44px;
+  align-items: center;
+}
+.minimal-workspace .dashboard-heading h1,
+.minimal-workspace .editor-heading h1 {
+  font:
+    550 29px/1.2 Manrope,
+    sans-serif;
+  letter-spacing: -1px;
+  margin: 0;
+}
+.minimal-demo-note {
+  font-size: 10px;
+  line-height: 1.8;
+  color: #a596ae;
+  margin: 0 0 22px;
+}
+.minimal-workspace .metric-card {
+  padding: 17px 18px;
+}
+.minimal-workspace .metric-card > strong {
+  font-size: 31px;
+  margin: 12px 0 0;
+  letter-spacing: -1px;
+}
+.minimal-workspace .metric-card > div {
+  font-size: 11px;
+  color: #b4a7bd;
+}
+.minimal-workspace .metric-grid {
+  margin-bottom: 22px;
+}
+.minimal-workspace .contacts-heading {
+  padding: 20px;
+}
+.minimal-workspace .contacts-heading h2 {
+  font:
+    500 16px Manrope,
+    sans-serif;
+  margin: 0;
+}
+.minimal-workspace .contact-management {
+  padding: 0 20px 18px;
+}
+.minimal-workspace .contact-row {
+  padding: 16px 20px;
+}
+.minimal-workspace .inline-feedback {
+  font-size: 11px;
+  line-height: 1.8;
+  color: #c4d4b4;
+  padding: 0 20px 15px;
+  margin: 0;
+}
+.minimal-workspace .contact-detail > .lead-status {
+  margin-top: 19px;
+  font-size: 10px;
+}
+.editor-advanced {
+  border: 1px solid #ffffff12;
+  border-radius: 10px;
+  background: #141217;
+  margin: 0 0 17px;
+  overflow: hidden;
+}
+.editor-advanced > summary {
+  min-height: 48px;
+  padding: 15px 20px;
+  font-size: 12px;
+  color: #d4c7df;
+  cursor: pointer;
+}
+.editor-advanced .editor-section {
+  border: 0;
+  border-top: 1px solid #ffffff0d;
+  margin: 0;
+  border-radius: 0;
+}
+.minimal-workspace .editor-section {
+  padding: 22px;
+  margin-bottom: 17px;
+}
+.minimal-workspace .editor-section-title h2 {
+  font-size: 15px;
+  margin-bottom: 22px;
+}
+.minimal-workspace .live-card-preview {
+  padding: 15px 20px;
+  margin-bottom: 17px;
+}
+.minimal-workspace .live-card-preview > summary {
+  font-size: 12px;
+}
+.minimal-workspace .device-banner {
+  padding: 12px 16px;
+  font-size: 10px;
+  align-items: center;
+}
+.minimal-workspace .device-banner p {
+  margin: 0;
+  font-size: 10px;
+}
+.minimal-workspace .demo-panel-banner {
+  font-size: 10px;
+  padding: 10px 14px;
+  margin-bottom: 20px;
+}
+.minimal-workspace .publish-panel {
+  padding-top: 22px;
+}
+.minimal-workspace .publish-panel h2 {
+  font-size: 13px;
+}
+.minimal-workspace .publish-panel p {
+  font-size: 10px;
+}
+.minimal-workspace .workspace-footer {
+  font-size: 9px;
+  padding: 17px 0;
+}
+.minimal-workspace .editor-actions {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  background: #0e0e12ed;
+  backdrop-filter: blur(10px);
+  padding: 14px 0;
+  border-top: 1px solid #ffffff0b;
+}
+.access-card h1 {
+  margin-bottom: 24px;
+}
+.access-card .interface-demo-note {
+  font-size: 10px;
+  letter-spacing: 0;
+  text-transform: none;
+  margin-bottom: 23px;
+}
+.contact-search button {
+  min-width: 28px;
+  min-height: 28px;
+  align-items: center;
+  justify-content: center;
+}
+.lead-detail-actions button {
+  min-height: 44px;
+}
+@media (max-width: 1000px) {
+  .minimal-profile-layout {
+    grid-template-columns: minmax(240px, 330px) minmax(320px, 360px);
+    gap: 45px;
+  }
+  .physical-showcase .reference-physical-card {
+    width: 100%;
+  }
+}
+@media (max-width: 740px) {
+  .minimal-header {
+    min-height: 58px;
+  }
+  .minimal-profile-layout {
+    display: block;
+    padding: 18px 0 30px;
+  }
+  .physical-showcase {
+    display: none;
+  }
+  .minimal-public .profile-column {
+    max-width: 370px;
+    margin: auto;
+  }
+  .minimal-public .reference-profile {
+    border-radius: 17px;
+  }
+  .minimal-public .reference-location {
+    margin-bottom: 22px;
+  }
+  .minimal-welcome > main {
+    margin: 65px 0 40px;
+  }
+  .minimal-welcome h1 {
+    font-size: 45px;
+    letter-spacing: -2.2px;
+  }
+  .minimal-welcome p {
+    font-size: 13px;
+  }
+  .minimal-welcome .primary-button {
+    max-width: none;
+  }
+  .minimal-welcome .welcome-secondary {
+    justify-content: flex-start;
+    font-size: 11px;
+    gap: 28px;
+  }
+  .minimal-workspace .workspace-header {
+    height: 65px;
+  }
+  .minimal-workspace .workspace-layout {
+    padding-top: 0;
+  }
+  .minimal-workspace .workspace-sidebar {
+    padding: 14px 0;
+    margin-bottom: 25px;
+  }
+  .minimal-workspace .dashboard-heading h1,
+  .minimal-workspace .editor-heading h1 {
+    font-size: 26px;
+  }
+  .minimal-workspace .metric-card {
+    padding: 15px 12px;
+  }
+  .minimal-workspace .metric-card > div {
+    font-size: 9px;
+    line-height: 1.6;
+  }
+  .minimal-workspace .metric-card > strong {
+    font-size: 26px;
+    margin-top: 11px;
+  }
+  .minimal-workspace .contacts-heading {
+    padding: 18px 16px;
+    gap: 15px;
+  }
+  .minimal-workspace .contact-management {
+    padding: 0 16px 16px;
+  }
+  .minimal-workspace .contact-row {
+    padding: 15px 16px;
+  }
+  .minimal-workspace .contact-person strong {
+    font-size: 11px;
+  }
+  .minimal-workspace .editor-section {
+    padding: 19px 16px;
+  }
+  .editor-advanced > summary {
+    padding: 14px 16px;
+    font-size: 12px;
+  }
+  .minimal-workspace .editor-section-title h2 {
+    font-size: 14px;
+  }
+  .minimal-workspace .editor-actions {
+    gap: 8px;
+    padding: 11px 0;
+  }
+  .minimal-workspace .live-card-preview {
+    padding: 14px 16px;
+  }
+  .minimal-workspace .demo-panel-banner {
+    font-size: 9px;
+  }
+  .minimal-workspace .minimal-demo-note {
+    font-size: 9px;
+  }
+  .minimal-workspace .workspace-footer {
+    align-items: flex-start;
+  }
+  .minimal-workspace .contact-row > .contact-email {
+    display: none;
+  }
+  .minimal-workspace .contact-row .lead-status {
+    margin-left: auto;
+  }
+  .modal-actions > button {
+    min-height: 44px;
+  }
+}

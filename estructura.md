@@ -50,7 +50,7 @@ src/
 
 ## Rutas de la demo
 
-Se utiliza `HashRouter` para funcionar en hosting estático sin reglas especiales de reescritura. Un enlace completo tiene la forma `https://dominio/#/panel`.
+Se utiliza `createHashRouter` para funcionar en hosting estático sin reglas especiales de reescritura y proteger cambios sin guardar con `useBlocker`. Un enlace completo tiene la forma `https://dominio/#/panel`.
 
 | Ruta                 | Pantalla / comportamiento                              |
 | -------------------- | ------------------------------------------------------ |
@@ -163,6 +163,8 @@ Los tiempos de simulación viven en `demo-services.ts`; las animaciones de entra
 La tarjeta sigue la referencia visual de R&A: negro y dorado, foto centrada, canales de contacto, vCard blanca y formulario «Conectar de vuelta». `reference.css` contiene estos ajustes. `PhysicalCard` se reutiliza en escritorio y en el diálogo móvil. La fotografía ilustrativa está en `public/demo-avatar.jpg` ([fuente de imagen en Unsplash](https://images.unsplash.com/photo-1580489944761-15a19d654956)); no representa una cuenta real.
 
 ## Verificación y entrega
+
+`pruebas.md` registra la prueba funcional en Chrome, las correcciones y los límites de verificación. `minimal.css` concentra la presentación simplificada; las opciones avanzadas siguen disponibles en secciones plegadas.
 
 ```sh
 npm install

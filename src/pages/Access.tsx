@@ -68,8 +68,8 @@ export function Access({
     }
   }
   const title = {
-    login: "Qué bueno verte de nuevo.",
-    register: "Tu próxima etapa empieza aquí.",
+    login: "Iniciar sesión",
+    register: "Crear cuenta",
     reset: "Recupera tu acceso.",
     password: "Elige una nueva contraseña.",
   }[mode];
@@ -83,16 +83,10 @@ export function Access({
         </Link>
       </header>
       <main className="access-card reveal">
-        <span className="eyebrow">TU ESPACIO ONE CARD</span>
         <h1>{title}</h1>
-        <p className="access-description">
-          {mode === "register"
-            ? "Una cuenta. Tu tarjeta. Un mundo de conexiones."
-            : "Tu identidad profesional merece su propio espacio."}
-        </p>
         {!auth && (
           <span className="interface-demo-note">
-            VISTA PREVIA DE INTERFAZ · SIN AUTENTICACIÓN REAL
+            Demo · no crea cuentas reales
           </span>
         )}
         {(mode === "login" || mode === "register") && (
@@ -215,12 +209,6 @@ export function Access({
             <ArrowRight size={15} />
           </Link>
         )}
-        <p className="access-privacy">
-          <LockKeyhole size={13} />
-          {auth
-            ? "Tu acceso se gestiona de forma segura."
-            : "Usa datos de prueba para explorar esta interfaz."}
-        </p>
       </main>
     </div>
   );

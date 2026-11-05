@@ -2,6 +2,20 @@ import { describe, expect, it } from "vitest";
 import { connect, createVCard, validateConnection } from "./profile-services";
 import { emptyDraft, toProfessionalProfile } from "./workspace-services";
 describe("vCard export", () => {
+  it("omits missing optional fields in a newly created profile", () => {
+    const card = createVCard(
+      toProfessionalProfile({
+        ...emptyDraft(),
+        firstName: "QA",
+        lastName: "Local",
+        role: "Pruebas",
+      }),
+    );
+    expect(card).toContain("FN:QA Local");
+    expect(card).not.toContain("TEL;");
+    expect(card).not.toContain("EMAIL:");
+    expect(card).not.toContain("ORG:");
+  });
   it("escapes reserved characters and line breaks to prevent property injection", () => {
     const card = createVCard({
       ...toProfessionalProfile({

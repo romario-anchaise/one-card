@@ -4,6 +4,8 @@ Interfaz premium diseñada para móvil y adaptable a escritorio. React + TypeScr
 
 Consulta **[estructura.md](estructura.md)** para localizar archivos, rutas, campos, estados y puntos de integración.
 
+Consulta **[pruebas.md](pruebas.md)** para los resultados de la prueba funcional en Chrome y los pendientes reales.
+
 ## Ejecutar
 
 Node.js 22.12+ o 24 LTS.

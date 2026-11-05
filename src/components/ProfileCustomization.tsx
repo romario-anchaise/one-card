@@ -71,7 +71,11 @@ export function ProfileCustomization({
     onChange({ links: copy });
   }
   return (
-    <section className="editor-section customization-section">
+    <section
+      className="editor-section customization-section"
+      id="profile-customization"
+      tabIndex={-1}
+    >
       <div className="editor-section-title">
         <h2>Hazla tuya</h2>
         <p>
@@ -118,6 +122,20 @@ export function ProfileCustomization({
           {photoError}
         </p>
       )}
+      <details className="optional-message">
+        <summary>Usar un enlace de imagen</summary>
+        <div className="field">
+          <label htmlFor="edit-avatarUrl">URL de la fotografía</label>
+          <input
+            id="edit-avatarUrl"
+            type="url"
+            maxLength={2048}
+            value={draft.avatarUrl.startsWith("data:") ? "" : draft.avatarUrl}
+            placeholder="https://…"
+            onChange={(e) => onChange({ avatarUrl: e.target.value })}
+          />
+        </div>
+      </details>
       <fieldset className="appearance-options">
         <legend>Acabado de la tarjeta</legend>
         {[
@@ -144,7 +162,7 @@ export function ProfileCustomization({
           </label>
         ))}
       </fieldset>
-      <div className="links-editor-heading">
+      <div className="links-editor-heading" id="profile-links" tabIndex={-1}>
         <div>
           <h3>Tus enlaces</h3>
           <p>Portafolio, sitio web, agenda o catálogo. Hasta 6 enlaces.</p>

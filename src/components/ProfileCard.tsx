@@ -5,7 +5,6 @@ import {
   Mail,
   MessageCircle,
   Phone,
-  QrCode,
   Share2,
   UserRoundPlus,
 } from "lucide-react";
@@ -51,21 +50,14 @@ export function ProfileCard({
       aria-label={`Tarjeta profesional de ${profile.name}`}
     >
       <div className="profile-utility-row">
-        <span className="eyebrow">ONE CARD</span>
         <div className="profile-tools">
-          <button
-            className="icon-button"
-            onClick={onShare}
-            aria-label="Mostrar QR del perfil"
-          >
-            <QrCode size={16} />
-          </button>
           <button
             className="icon-button"
             onClick={onShare}
             aria-label="Compartir perfil"
           >
             <Share2 size={15} />
+            <span>Compartir</span>
           </button>
         </div>
       </div>
@@ -84,13 +76,11 @@ export function ProfileCard({
           </div>
           <h1>{profile.name}</h1>
           {profile.role && <p className="role">{profile.role}</p>}
-          <p className="reference-location">
-            {[profile.company, profile.location].filter(Boolean).join(" · ")}
-          </p>
-          <div className="reference-badges">
-            {profile.demo && <span>PERFIL DE EJEMPLO</span>}
-            <button onClick={onShare}>NFC + QR</button>
-          </div>
+          {(profile.company || profile.location) && (
+            <p className="reference-location">
+              {[profile.company, profile.location].filter(Boolean).join(" · ")}
+            </p>
+          )}
         </div>
         <div className="contact-links">
           {profile.contacts.map((contact) => {
@@ -122,7 +112,7 @@ export function ProfileCard({
         </div>
         <button className="primary-button save-button" onClick={onSave}>
           <UserRoundPlus size={16} />
-          Guardar en Contactos (vCard)
+          Guardar contacto
         </button>
         {!!profile.links?.length && (
           <div className="profile-resource-links">
@@ -172,10 +162,6 @@ export function ProfileCard({
           Ver tarjeta física
           <ArrowUpRight size={13} />
         </button>
-        <div className="card-footer">
-          <span>Tu identidad. En un solo toque.</span>
-          <span className="small-wordmark">R&A · ONE CARD</span>
-        </div>
       </div>
     </article>
   );

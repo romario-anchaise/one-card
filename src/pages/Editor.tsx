@@ -1,5 +1,5 @@
-import { useEffect, useState, type FormEvent } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useEffect, useRef, useState, type FormEvent } from "react";
+import { useNavigate, useBlocker, Link } from "react-router-dom";
 import {
   ArrowUpRight,
   CheckCircle2,
@@ -29,6 +29,7 @@ import {
 } from "../application/workspace-services";
 import { downloadFile } from "../infrastructure/browser";
 import { Brand } from "../components/Brand";
+import { Modal } from "../components/Modal";
 import { ProfileCustomization } from "../components/ProfileCustomization";
 import { PhysicalCard } from "../components/PhysicalCard";
 import { toProfessionalProfile } from "../application/workspace-services";
@@ -76,13 +77,6 @@ const sections: {
         key: "location",
         label: "Ciudad y país",
         placeholder: "¿Dónde trabajas?",
-      },
-      {
-        key: "avatarUrl",
-        label: "URL de tu fotografía",
-        placeholder: "https://…",
-        type: "url",
-        hint: "Opcional. Una imagen pública en HTTPS; si la omites se usarán tus iniciales.",
       },
     ],
   },
@@ -137,6 +131,8 @@ export function Editor({
   const [busy, setBusy] = useState(false);
   const navigate = useNavigate();
   const dirty = loaded && JSON.stringify(draft) !== initial;
+  const savedNavigation = useRef(false);
+  const blocker = useBlocker(() => dirty && !savedNavigation.current);
   useEffect(() => {
     let active = true;
     setLoaded(false);
@@ -186,7 +182,18 @@ export function Editor({
     const next = validateDraft(value);
     setErrors(next);
     if (Object.keys(next).length) {
-      document.getElementById(`edit-${Object.keys(next)[0]}`)?.focus();
+      const key = Object.keys(next)[0];
+      const target =
+        document.getElementById(`edit-${key}`) ??
+        document.getElementById(
+          key === "links" ? "profile-links" : "profile-customization",
+        );
+      let parent = target?.parentElement;
+      while (parent) {
+        if (parent instanceof HTMLDetailsElement) parent.open = true;
+        parent = parent.parentElement;
+      }
+      target?.focus();
       return;
     }
     setBusy(true);
@@ -198,11 +205,12 @@ export function Editor({
       setRecord(result);
       setDraft(result.draft);
       setInitial(JSON.stringify(result.draft));
-      if (action === "preview")
+      if (action === "preview") {
+        savedNavigation.current = true;
         navigate(
           store.mode === "demo" ? "/demo/vista-previa" : "/vista-previa",
         );
-      else
+      } else
         setNotice(
           action === "publish"
             ? "Tu tarjeta ya está publicada."
@@ -247,6 +255,7 @@ export function Editor({
       return;
     try {
       await auth?.signOut();
+      savedNavigation.current = true;
       navigate("/");
     } catch {
       setError("No pudimos cerrar la sesión.");
@@ -259,16 +268,26 @@ export function Editor({
         Cargando tu espacio…
       </div>
     );
-  const filled = [
-    draft.firstName,
-    draft.lastName,
-    draft.role,
-    draft.company,
-    draft.bio,
-    draft.email || draft.phone || draft.whatsapp,
-  ].filter((x) => x.trim()).length;
   return (
-    <div className="workspace-shell">
+    <div className="workspace-shell minimal-workspace">
+      {blocker.state === "blocked" && (
+        <Modal title="Cambios sin guardar" onClose={() => blocker.reset()}>
+          <p className="modal-description">
+            Si sales, perderás los cambios de esta edición.
+          </p>
+          <div className="modal-actions">
+            <button className="primary-button" onClick={() => blocker.reset()}>
+              Seguir editando
+            </button>
+            <button
+              className="secondary-button"
+              onClick={() => blocker.proceed()}
+            >
+              Salir sin guardar
+            </button>
+          </div>
+        </Modal>
+      )}
       <header className="workspace-header">
         <Brand />
         <div className="workspace-header-actions">
@@ -294,7 +313,6 @@ export function Editor({
       </header>
       <div className="workspace-layout">
         <aside className="workspace-sidebar">
-          <span className="eyebrow">MI ESPACIO</span>
           <Link className="workspace-nav" to="/panel">
             Resumen
           </Link>
@@ -310,112 +328,72 @@ export function Editor({
             <Eye size={17} />
             Vista previa
           </button>
-          <Link
-            className="workspace-nav"
-            to="/acceso"
-            onClick={(e) => {
-              if (
-                dirty &&
-                !window.confirm(
-                  "Hay cambios sin guardar. ¿Quieres salir del editor?",
-                )
-              )
-                e.preventDefault();
-            }}
-          >
+          <Link className="workspace-nav" to="/acceso">
             <ShieldCheck size={17} />
             {account ? "Mi cuenta" : "Acceso a cuentas"}
           </Link>
           <Link className="workspace-nav" to="/contactos">
             Contactos recibidos
           </Link>
-          <div className="sidebar-note">
-            <ShieldCheck size={18} />
-            <p>
-              {store.mode === "device"
-                ? "Tu borrador permanece en este navegador. Todavía no es visible para otras personas."
-                : store.mode === "demo"
-                  ? "Explora con datos ficticios. Tus cambios de prueba solo duran esta sesión."
-                  : "Solo tú puedes editar tu perfil. Tú decides cuándo publicarlo."}
-            </p>
-          </div>
         </aside>
         <main className="editor-main">
           <div className="editor-heading">
             <div>
-              <span className="eyebrow">TU IDENTIDAD PROFESIONAL</span>
-              <h1>{record ? "Dale tu toque." : "Empecemos contigo."}</h1>
-              <p>
-                {record
-                  ? "Mantén tu presentación tan actual como tú."
-                  : "Completa tu información y crea una tarjeta que te represente."}
-              </p>
+              <h1>Mi tarjeta</h1>
             </div>
             <span className="draft-badge">
-              {record?.published ? "Publicada" : "Borrador"}
+              {dirty
+                ? "Sin guardar"
+                : record?.published
+                  ? "Publicada"
+                  : "Borrador"}
             </span>
           </div>
           {store.mode === "device" && (
             <div className="device-banner">
               <CloudOff size={20} />
               <div>
-                <strong>Estás creando un borrador local.</strong>
-                <p>
-                  Se guarda en este navegador. Para acceder desde otro
-                  dispositivo, recibir contactos y compartir un enlace público
-                  hará falta activar las cuentas en la nube.
-                </p>
+                <p>Guardado solo en este navegador.</p>
               </div>
             </div>
           )}
           {store.mode === "demo" && (
             <div className="demo-panel-banner">
               <ShieldCheck size={17} />
-              <span>
-                Modo demostración. Los datos son ficticios y puedes editarlos
-                libremente.
-              </span>
+              <span>Demo: los cambios se reinician al recargar.</span>
             </div>
           )}
-          <div className="profile-progress">
-            <span>Tu perfil, paso a paso</span>
-            <div>
-              <span style={{ width: `${(filled / 6) * 100}%` }} />
-            </div>
-            <strong>{filled}/6</strong>
-          </div>
           <form onSubmit={submit} noValidate>
             <fieldset disabled={busy} className="editor-fields">
-              <details className="live-card-preview" open>
-                <summary>
-                  Vista previa en vivo
-                  <span>Los cambios se reflejan mientras escribes</span>
-                </summary>
+              <details className="live-card-preview">
+                <summary>Vista previa en vivo</summary>
                 <PhysicalCard profile={toProfessionalProfile(draft)} />
               </details>
-              <ProfileCustomization
-                draft={draft}
-                onChange={(changes) => {
-                  setDraft((previous) => ({ ...previous, ...changes }));
-                  setNotice("");
-                }}
-                onImport={(value) => {
-                  setDraft({
-                    ...value,
-                    slug: store.mode === "demo" ? draft.slug : value.slug,
-                  });
-                  setErrors({});
-                  setNotice(
-                    "Respaldo cargado en el editor. Revisa los datos y guarda.",
-                  );
-                }}
-                error={errors.links}
-              />
+              <details className="editor-advanced">
+                <summary>Foto, diseño y enlaces</summary>
+                <ProfileCustomization
+                  draft={draft}
+                  onChange={(changes) => {
+                    setDraft((previous) => ({ ...previous, ...changes }));
+                    setNotice("");
+                  }}
+                  onImport={(value) => {
+                    setDraft({
+                      ...value,
+                      slug: store.mode === "demo" ? draft.slug : value.slug,
+                    });
+                    setErrors({});
+                    setNotice(
+                      "Respaldo cargado en el editor. Revisa los datos y guarda.",
+                    );
+                  }}
+                  error={errors.links}
+                />
+              </details>
               {sections.map((section) => (
                 <section className="editor-section" key={section.title}>
                   <div className="editor-section-title">
                     <h2>{section.title}</h2>
-                    <p>{section.description}</p>
                   </div>
                   <div className="editor-grid">
                     {section.fields.map((field) => (
@@ -489,58 +467,64 @@ export function Editor({
                   </div>
                 </section>
               ))}
-              <section className="editor-section">
-                <div className="editor-section-title">
-                  <h2>Un poco más de ti</h2>
-                  <p>Las conexiones también empiezan con una buena historia.</p>
-                </div>
-                <div className="field">
-                  <label htmlFor="edit-bio">
-                    Presentación breve{" "}
-                    <span className="optional">{draft.bio.length}/500</span>
-                  </label>
-                  <textarea
-                    id="edit-bio"
-                    value={draft.bio}
-                    onChange={(e) => update("bio", e.target.value)}
-                    maxLength={500}
-                    rows={4}
-                    placeholder="Cuenta qué haces, qué te mueve y cómo puedes aportar."
-                  />
-                </div>
-                <div className="field">
-                  <label htmlFor="edit-expertise">Áreas de interés</label>
-                  <input
-                    id="edit-expertise"
-                    value={draft.expertise}
-                    onChange={(e) => update("expertise", e.target.value)}
-                    maxLength={150}
-                    placeholder="Separa tus áreas de interés con comas"
-                  />
-                </div>
-                <div className="field">
-                  <label htmlFor="edit-slug">Identificador de tu tarjeta</label>
-                  <input
-                    id="edit-slug"
-                    value={draft.slug}
-                    onChange={(e) => update("slug", e.target.value)}
-                    readOnly={store.mode !== "device" && !!record}
-                    placeholder="Se generará a partir de tu nombre"
-                    aria-invalid={!!errors.slug}
-                    aria-describedby={errors.slug ? "error-slug" : "hint-slug"}
-                  />
-                  <small className="field-hint" id="hint-slug">
-                    {store.mode === "cloud" && record
-                      ? "El enlace queda fijo para que tu QR siga funcionando."
-                      : "Será parte de tu enlace cuando publiques tu tarjeta."}
-                  </small>
-                  {errors.slug && (
-                    <small id="error-slug" className="error">
-                      {errors.slug}
+              <details className="editor-advanced">
+                <summary>Más información</summary>
+                <section className="editor-section">
+                  <div className="editor-section-title">
+                    <h2>Sobre ti</h2>
+                  </div>
+                  <div className="field">
+                    <label htmlFor="edit-bio">
+                      Presentación breve{" "}
+                      <span className="optional">{draft.bio.length}/500</span>
+                    </label>
+                    <textarea
+                      id="edit-bio"
+                      value={draft.bio}
+                      onChange={(e) => update("bio", e.target.value)}
+                      maxLength={500}
+                      rows={4}
+                      placeholder="Cuenta qué haces, qué te mueve y cómo puedes aportar."
+                    />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="edit-expertise">Áreas de interés</label>
+                    <input
+                      id="edit-expertise"
+                      value={draft.expertise}
+                      onChange={(e) => update("expertise", e.target.value)}
+                      maxLength={150}
+                      placeholder="Separa tus áreas de interés con comas"
+                    />
+                  </div>
+                  <div className="field">
+                    <label htmlFor="edit-slug">
+                      Identificador de tu tarjeta
+                    </label>
+                    <input
+                      id="edit-slug"
+                      value={draft.slug}
+                      onChange={(e) => update("slug", e.target.value)}
+                      readOnly={store.mode !== "device" && !!record}
+                      placeholder="Se generará a partir de tu nombre"
+                      aria-invalid={!!errors.slug}
+                      aria-describedby={
+                        errors.slug ? "error-slug" : "hint-slug"
+                      }
+                    />
+                    <small className="field-hint" id="hint-slug">
+                      {store.mode === "cloud" && record
+                        ? "El enlace queda fijo para que tu QR siga funcionando."
+                        : "Será parte de tu enlace cuando publiques tu tarjeta."}
                     </small>
-                  )}
-                </div>
-              </section>
+                    {errors.slug && (
+                      <small id="error-slug" className="error">
+                        {errors.slug}
+                      </small>
+                    )}
+                  </div>
+                </section>
+              </details>
               {error && (
                 <p role="alert" className="error editor-feedback">
                   {error}
@@ -574,11 +558,11 @@ export function Editor({
           </form>
           <section className="publish-panel">
             <div>
-              <h2>Tu tarjeta, lista para salir al mundo.</h2>
+              <h2>{store.mode === "cloud" ? "Publicación" : "Respaldo"}</h2>
               <p>
                 {store.mode !== "cloud"
-                  ? "La publicación real se conectará con el backend. Mientras tanto puedes previsualizar tu tarjeta y descargar los datos para revisar la integración."
-                  : "Publica tu tarjeta para que otras personas puedan conocer tu perfil y contactar contigo."}
+                  ? "Descarga una copia de tus datos."
+                  : "Elige cuándo mostrar tu perfil."}
               </p>
             </div>
             {store.mode !== "cloud" ? (
@@ -633,7 +617,6 @@ export function Editor({
         </main>
       </div>
       <footer className="workspace-footer">
-        ONE CARD by R&A · Tu identidad, siempre contigo.
         {record && (
           <span>
             Último guardado:{" "}

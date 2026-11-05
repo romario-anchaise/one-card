@@ -6,6 +6,7 @@ import "./workspace.css";
 import "./demo.css";
 import "./reference.css";
 import "./functionality.css";
+import "./minimal.css";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <ProductApp />

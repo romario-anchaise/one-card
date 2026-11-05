@@ -68,7 +68,7 @@ export function ConnectionForm({
         )}
         <p>
           {compact
-            ? "Deja tu nombre y correo para seguir en contacto."
+            ? "Déjame tus datos para responderte."
             : "Déjame tus datos y encontremos un punto en común."}
         </p>
       </div>
@@ -175,7 +175,7 @@ export function ConnectionForm({
       <p className="privacy-note">
         <LockKeyhole size={12} />{" "}
         {demo
-          ? "Usa datos de prueba. Solo se añadirán a la bandeja demo de esta sesión; no se envían a un servidor."
+          ? "Demo: datos solo en esta sesión."
           : "Tus datos se comparten con el dueño de esta tarjeta para responder a tu solicitud."}
       </p>
     </form>
