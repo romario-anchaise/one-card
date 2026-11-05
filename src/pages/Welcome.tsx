@@ -1,6 +1,7 @@
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
 import { AppHeader } from "../components/AppHeader";
+import { demoDraft } from "../infrastructure/demo-data";
 export function Welcome() {
   return (
     <div className="page-shell minimal-welcome">
@@ -21,7 +22,7 @@ export function Welcome() {
           <ArrowRight size={17} />
         </Link>
         <div className="welcome-secondary">
-          <Link to="/p/valentina-mora">Ver ejemplo</Link>
+          <Link to={`/p/${demoDraft.slug}`}>Ver ejemplo</Link>
           <Link to="/editar">Crear tarjeta</Link>
         </div>
         <small>Demo · sin cuentas reales</small>

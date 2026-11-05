@@ -284,6 +284,10 @@ function ProductRoutes() {
         <Route path="/vista-previa" element={<Preview store={device} />} />
         <Route path="/demo/vista-previa" element={<Preview store={demo} />} />
         <Route
+          path="/p/valentina-mora"
+          element={<Navigate to={`/p/${demoDraft.slug}`} replace />}
+        />
+        <Route
           path="/p/:slug"
           element={<PublicProfile store={demo} gateway={connectionGateway} />}
         />

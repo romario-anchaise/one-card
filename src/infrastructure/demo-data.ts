@@ -1,23 +1,21 @@
 import type { ProfileDraft } from "../domain/workspace";
 import type { LeadRecord } from "../domain/contact";
-export const demoAvatarUrl =
-  "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=faces&q=85";
-/** Illustrative fixtures, never actual users, analytics, or contacts. */
+/** Example card shown without a registered account. */
 export const demoDraft: ProfileDraft = {
   id: "e5b9e38a-32ec-4b81-a674-5ebcbfd5c5db",
-  slug: "valentina-mora",
-  firstName: "Valentina",
-  lastName: "Mora",
-  role: "Directora de Alianzas",
-  company: "Norte Atelier",
-  location: "Ciudad de México, MX",
-  bio: "Creo en las conexiones que abren posibilidades. Conecto marcas, ideas y personas para construir alianzas que dejan huella.",
-  email: "valentina@example.com",
-  phone: "+12025550148",
-  whatsapp: "+12025550148",
-  linkedin: "https://www.linkedin.com/",
-  avatarUrl: demoAvatarUrl,
-  expertise: "Alianzas estratégicas, Brand experience, Networking",
+  slug: "romario-anchaise",
+  firstName: "Romario",
+  lastName: "Anchaise",
+  role: "Profesional",
+  company: "",
+  location: "Arequipa, Perú",
+  bio: "",
+  email: "",
+  phone: "",
+  whatsapp: "",
+  linkedin: "",
+  avatarUrl: "",
+  expertise: "",
 };
 export const demoContacts: LeadRecord[] = [
   {
@@ -50,7 +48,7 @@ export const demoContacts: LeadRecord[] = [
     initials: "DS",
     company: "Distrito Studio",
     email: "diego@example.com",
-    message: "Me interesa conocer más sobre las alianzas de Norte Atelier.",
+    message: "Me interesa conversar sobre una posible alianza.",
     date: "Ayer, 09:15",
     channel: "Formulario",
     status: "new",

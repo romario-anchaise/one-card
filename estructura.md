@@ -55,12 +55,14 @@ src/
 
 ## Rutas de la demo
 
+En `ProfileDraft.links`, `hidden: true` conserva el enlace en el editor y en el respaldo. `toProfessionalProfile` lo omite de la vista previa y de la proyección pública. Los enlaces existentes sin ese campo siguen visibles. El adaptador de backend debe aplicar el mismo filtro al devolver perfiles públicos.
+
 Se utiliza `createHashRouter` para funcionar en hosting estático sin reglas especiales de reescritura y proteger cambios sin guardar con `useBlocker`. Un enlace completo tiene la forma `https://dominio/#/panel`.
 
 | Ruta                 | Pantalla / comportamiento                              |
 | -------------------- | ------------------------------------------------------ |
 | `/`                  | Inicio; enlaces a panel, tarjeta y creación desde cero |
-| `/p/valentina-mora`  | Perfil ficticio; QR y vCard de ejemplo                 |
+| `/p/romario-anchaise` | Tarjeta de ejemplo con QR y vCard                      |
 | `/panel`             | Métricas y contactos de ejemplo                        |
 | `/contactos`         | Búsqueda y lectura de mensajes ficticios               |
 | `/demo/editar`       | Editor con datos de ejemplo; cambios solo en memoria   |

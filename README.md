@@ -27,7 +27,7 @@ npm run build
 ## Recorridos
 
 - Inicio: `/`.
-- Tarjeta de ejemplo: `/#/p/valentina-mora`.
+- Tarjeta de ejemplo: `/#/p/romario-anchaise`.
 - Panel y métricas de ejemplo: `/#/panel`.
 - Editor con datos de ejemplo: `/#/demo/editar`.
 - Crear un borrador vacío: `/#/editar`.

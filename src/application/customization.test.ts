@@ -55,10 +55,11 @@ describe("profile personalization", () => {
     await store.save({
       ...draft(),
       appearance: "steel",
-      links: [{ id: "1", label: "Web", url: "https://example.com" }],
+      links: [{ id: "1", label: "Web", url: "https://example.com", hidden: true }],
     });
     const loaded = await store.load();
     expect(loaded?.draft.appearance).toBe("steel");
-    expect(loaded?.draft.links).toHaveLength(1);
+    expect(loaded?.draft.links?.[0].hidden).toBe(true);
+    expect(toProfessionalProfile(loaded!.draft).links).toEqual([]);
   });
 });

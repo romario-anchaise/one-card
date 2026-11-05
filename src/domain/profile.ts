@@ -4,6 +4,7 @@ export interface ProfileLink {
   id: string;
   label: string;
   url: string;
+  hidden?: boolean;
 }
 export interface ContactLink {
   kind: ContactKind;

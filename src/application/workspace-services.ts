@@ -96,6 +96,7 @@ export function validateDraft(
         (link) =>
           !link ||
           typeof link.id !== "string" ||
+          (link.hidden !== undefined && typeof link.hidden !== "boolean") ||
           typeof link.label !== "string" ||
           link.label.trim().length < 1 ||
           link.label.length > 60 ||
@@ -151,7 +152,7 @@ export function toProfessionalProfile(
     contacts,
     avatarUrl: isAvatarSource(draft.avatarUrl) ? draft.avatarUrl : undefined,
     links: (draft.links ?? []).filter(
-      (link) => link.label.trim() && isHttpsUrl(link.url),
+      (link) => !link.hidden && link.label.trim() && isHttpsUrl(link.url),
     ),
     demo: false,
   };

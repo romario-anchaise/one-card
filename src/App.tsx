@@ -1,4 +1,5 @@
 import { useRef, useState } from "react";
+import { Capacitor } from "@capacitor/core";
 import { ArrowUpRight, Check, Copy, Share2, X } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
 import type { ConnectionGateway, ProfessionalProfile } from "./domain/profile";
@@ -21,14 +22,19 @@ export function App({
   const [modal, setModal] = useState<"share" | "physical" | null>(null);
   const [notice, setNotice] = useState("");
   const [copied, setCopied] = useState(false);
+  const [shareError, setShareError] = useState("");
   const qrRef = useRef<HTMLDivElement>(null);
-  const shareUrl = `${window.location.origin}${window.location.pathname}#/p/${encodeURIComponent(profile.slug ?? profile.id)}`;
+  const publicBaseUrl = Capacitor.isNativePlatform()
+    ? "https://one-card-romario.web.app/"
+    : `${window.location.origin}${window.location.pathname}`;
+  const shareUrl = `${publicBaseUrl}#/p/${encodeURIComponent(profile.slug ?? profile.id)}`;
   function share() {
     if (preview) {
       setNotice("Este borrador todavía no tiene un enlace público.");
       return;
     }
     setCopied(false);
+    setShareError("");
     setModal("share");
   }
   function saveContact() {
@@ -42,27 +48,28 @@ export function App({
     );
   }
   async function copyLink() {
+    setShareError("");
     try {
       await navigator.clipboard.writeText(shareUrl);
       setCopied(true);
     } catch {
-      setNotice("Selecciona y copia el enlace del perfil.");
+      setShareError("Selecciona y copia el enlace del perfil.");
     }
   }
   async function nativeShare() {
+    setShareError("");
     try {
-      if (navigator.share)
-        await navigator.share({
-          title: `${profile.name} · ONE CARD`,
-          url: shareUrl,
-        });
-      else await copyLink();
+      await navigator.share({
+        title: `${profile.name} · ONE CARD`,
+        url: shareUrl,
+      });
     } catch (error) {
       if (!(error instanceof DOMException && error.name === "AbortError"))
-        setNotice("No se pudo compartir. Puedes copiar el enlace.");
+        setShareError("No se pudo compartir. Puedes copiar el enlace.");
     }
   }
   async function downloadQr(format: "svg" | "png") {
+    setShareError("");
     const svg = qrRef.current?.querySelector("svg");
     if (!svg) return;
     try {
@@ -75,7 +82,7 @@ export function App({
         );
       setNotice(`QR ${format.toUpperCase()} generado.`);
     } catch {
-      setNotice("No pudimos generar el QR. Intenta con el otro formato.");
+      setShareError("No pudimos generar el QR. Intenta con el otro formato.");
     }
   }
   return (
@@ -154,13 +161,15 @@ export function App({
               QR SVG
             </button>
           </div>
-          <button
-            className="text-button native-share-button"
-            onClick={nativeShare}
-          >
-            <Share2 size={14} />
-            Compartir desde el dispositivo
-          </button>
+          {shareError && (
+            <p className="error" role="alert">{shareError}</p>
+          )}
+          {typeof navigator.share === "function" && (
+            <button className="text-button native-share-button" onClick={nativeShare}>
+              <Share2 size={14} />
+              Compartir desde el dispositivo
+            </button>
+          )}
         </Modal>
       )}
       {modal === "physical" && (

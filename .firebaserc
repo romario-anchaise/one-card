@@ -1,0 +1,6 @@
+{
+  "projects": { "default": "one-card-romario" },
+  "targets": {
+    "one-card-romario": { "hosting": { "one-card": ["one-card-romario"] } }
+  }
+}

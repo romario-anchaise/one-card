@@ -2,6 +2,8 @@ import { useState, type ChangeEvent } from "react";
 import {
   ArrowDown,
   ArrowUp,
+  Eye,
+  EyeOff,
   ImagePlus,
   Plus,
   Trash2,
@@ -231,6 +233,22 @@ export function ProfileCustomization({
             />
           </div>
           <div className="link-order-actions">
+            <button
+              type="button"
+              className="icon-button"
+              aria-label={`Ocultar enlace ${index + 1}`}
+              aria-pressed={link.hidden === true}
+              title={link.hidden ? "Mostrar enlace" : "Ocultar enlace"}
+              onClick={() =>
+                onChange({
+                  links: links.map((item) =>
+                    item.id === link.id ? { ...item, hidden: !item.hidden } : item,
+                  ),
+                })
+              }
+            >
+              {link.hidden ? <EyeOff size={15} /> : <Eye size={15} />}
+            </button>
             <button
               type="button"
               className="icon-button"
