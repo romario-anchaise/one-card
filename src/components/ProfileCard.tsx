@@ -31,7 +31,6 @@ export function ProfileCard({
   gateway,
   onSave,
   onShare,
-  onContact,
   onPhysical,
   preview = false,
 }: {
@@ -39,7 +38,6 @@ export function ProfileCard({
   gateway: ConnectionGateway;
   onSave: () => void;
   onShare: () => void;
-  onContact: () => void;
   onPhysical: () => void;
   preview?: boolean;
 }) {
@@ -89,14 +87,6 @@ export function ProfileCard({
               <a
                 key={contact.kind}
                 href={contact.href}
-                onClick={
-                  profile.demo
-                    ? (event) => {
-                        event.preventDefault();
-                        onContact();
-                      }
-                    : undefined
-                }
                 target={
                   contact.href.startsWith("https:") ? "_blank" : undefined
                 }

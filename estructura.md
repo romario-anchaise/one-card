@@ -92,6 +92,8 @@ Editar la demo y recargar la página restaura los ejemplos. El borrador propio u
 
 `toProfessionalProfile()` deriva nombre completo, iniciales, etiquetas y enlaces desde esos campos. No almacenar HTML ni aceptar URLs ejecutables en el servidor. Los canales vacíos se omiten. La foto puede ser una URL HTTPS o una imagen raster preparada en el navegador; todavía no se sube a un servidor.
 
+Los contactos son enlaces nativos activos: `https://wa.me/`, `tel:`, `mailto:` y la URL de LinkedIn. No se interceptan por estar en modo demo. Abren el destino o la aplicación correspondiente; el visitante confirma allí cualquier llamada o envío. El perfil de ejemplo mantiene datos ficticios, que deben sustituirse en el editor para contactar a una persona real.
+
 `StoredProfile` envuelve `{ draft, published, updatedAt }`. La fecha debe ser ISO 8601. `published` distingue un borrador de una publicación real; no convertir el guardado local en publicación.
 
 ## Puntos de conexión

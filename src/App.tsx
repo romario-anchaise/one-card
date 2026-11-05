@@ -108,11 +108,6 @@ export function App({
               onSave={saveContact}
               onShare={share}
               onPhysical={() => setModal("physical")}
-              onContact={() =>
-                setNotice(
-                  "Contacto de ejemplo. Usa tus datos al crear tu tarjeta.",
-                )
-              }
             />
           </section>
         </main>
