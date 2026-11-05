@@ -50,6 +50,22 @@ Entorno: Chrome de escritorio, con tamaños móviles simulados. Código local de
 
 ## Pendientes y límites concretos
 
+### Revisión de tamaños de iPhone
+
+Prueba visual adicional en Chrome de escritorio con tamaños de pantalla simulados; **no es una prueba del motor Safari ni de un dispositivo iOS real**.
+
+| Pantalla simulada     | Desbordamiento horizontal | Campos del formulario    |
+| --------------------- | ------------------------- | ------------------------ |
+| 375 × 667             | No                        | 16 px                    |
+| 390 × 844             | No                        | 16 px                    |
+| 393 × 852             | No                        | 16 px                    |
+| 430 × 932             | No                        | 16 px                    |
+| 844 × 390, horizontal | No                        | Corregidos de 12 a 16 px |
+
+Los contactos tienen áreas de 62 px de alto en vertical. Compartir y cerrar ventanas se comprobaron con áreas táctiles de 44 px. El diálogo de compartir cabe en horizontal y permite desplazamiento interno. El campo de correo conserva `type="email"`.
+
+Queda pendiente comprobar en Safari de un iPhone físico: teclado y zoom reales, barras dinámicas, áreas seguras, descarga/importación de vCard y QR, apertura de otras apps y compartir nativo.
+
 - **Carga de foto e importación JSON mediante selección de archivo:** la extensión de Chrome no permite `setFiles` sin «Allow access to file URLs». No se cambió ese permiso. El selector se abrió, pero la carga automática quedó bloqueada antes de que la aplicación recibiera el archivo. Estas dos acciones requieren comprobación manual o habilitar el permiso de la extensión.
 - **Android físico:** la prueba usó un viewport móvil de Chrome de escritorio. Falta comprobar escaneo del QR, importación de vCard, selector de fotos y compartir nativo en un teléfono real. NFC requiere además una tarjeta física configurada.
 - **Backend:** registro, Google, recuperación de cuenta, publicación, datos entre dispositivos y métricas reales no están conectados. Las pruebas de sesión no equivalen a probar esos servicios.

@@ -1,3 +1,27 @@
+/* Keep form text and primary touch controls usable in narrow landscape layouts too. */
+@media (max-width: 950px) {
+  .reference-connect .field input,
+  .reference-connect .field textarea,
+  .editor-main .field input,
+  .editor-main .field textarea,
+  .auth-fields .field input,
+  .share-url input,
+  .contact-search input,
+  .contact-management select {
+    font-size: 16px;
+  }
+  .modal-header .icon-button {
+    min-width: 44px;
+    min-height: 44px;
+  }
+  .minimal-public .profile-tools .icon-button {
+    min-height: 44px;
+  }
+  .workspace-nav {
+    min-height: 44px;
+  }
+}
+
 .minimal-header {
   min-height: 68px;
   display: flex;
@@ -34,7 +58,7 @@
 }
 .minimal-public .profile-tools .icon-button {
   width: auto;
-  min-height: 40px;
+  min-height: 44px;
   display: flex;
   gap: 7px;
   font-size: 10px;
