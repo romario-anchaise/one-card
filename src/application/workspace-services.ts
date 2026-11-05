@@ -80,11 +80,33 @@ export function validateDraft(
   if (draft.expertise.length > 150) errors.expertise = "Máximo 150 caracteres.";
   if (draft.linkedin && !isHttpsUrl(draft.linkedin, "linkedin.com"))
     errors.linkedin = "Usa un enlace https:// de LinkedIn.";
+  if (draft.avatarUrl && !isAvatarSource(draft.avatarUrl))
+    errors.avatarUrl =
+      "Usa una foto válida o una URL HTTPS de máximo 2048 caracteres.";
   if (
-    draft.avatarUrl &&
-    (!isHttpsUrl(draft.avatarUrl) || draft.avatarUrl.length > 2048)
+    draft.appearance &&
+    !["matte", "bamboo", "steel"].includes(draft.appearance)
   )
-    errors.avatarUrl = "Usa una URL HTTPS válida (máximo 2048 caracteres).";
+    errors.appearance = "Selecciona un acabado válido.";
+  if (
+    draft.links &&
+    (!Array.isArray(draft.links) ||
+      draft.links.length > 6 ||
+      draft.links.some(
+        (link) =>
+          !link ||
+          typeof link.id !== "string" ||
+          typeof link.label !== "string" ||
+          link.label.trim().length < 1 ||
+          link.label.length > 60 ||
+          typeof link.url !== "string" ||
+          link.url.length > 2048 ||
+          !isHttpsUrl(link.url),
+      ) ||
+      new Set(draft.links.map((link) => link.id)).size !== draft.links.length)
+  )
+    errors.links =
+      "Completa el título y una URL HTTPS válida en cada enlace (máximo 6).";
   return errors;
 }
 
@@ -127,9 +149,20 @@ export function toProfessionalProfile(
       .filter(Boolean)
       .slice(0, 5),
     contacts,
-    avatarUrl: isHttpsUrl(draft.avatarUrl) ? draft.avatarUrl : undefined,
+    avatarUrl: isAvatarSource(draft.avatarUrl) ? draft.avatarUrl : undefined,
+    links: (draft.links ?? []).filter(
+      (link) => link.label.trim() && isHttpsUrl(link.url),
+    ),
     demo: false,
   };
+}
+
+export function isAvatarSource(value: string): boolean {
+  return (
+    (value.length <= 2048 && isHttpsUrl(value)) ||
+    (value.length <= 750000 &&
+      /^data:image\/(?:png|jpeg|webp);base64,[A-Za-z0-9+/]+=*$/.test(value))
+  );
 }
 
 export function isStoredDraft(value: unknown): value is ProfileDraft {

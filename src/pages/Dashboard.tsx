@@ -14,36 +14,45 @@ import {
   ShieldCheck,
   Users,
   X,
+  Download,
+  Archive,
+  RotateCcw,
 } from "lucide-react";
 import { Brand } from "../components/Brand";
 import { Modal } from "../components/Modal";
+import type { LeadRecord, LeadStatus } from "../domain/contact";
+import type { ProfileDraft } from "../domain/workspace";
 import {
-  demoContacts,
-  demoDraft,
-  demoMetrics,
-} from "../infrastructure/demo-data";
+  contactsToCsv,
+  filterContacts,
+  type ContactFilter,
+} from "../application/contact-services";
+import { downloadFile } from "../infrastructure/browser";
+import { demoMetrics } from "../infrastructure/demo-data";
 
 export function Dashboard({
   contactsOnly = false,
+  records,
+  onStatusChange,
+  profile: demoDraft,
 }: {
   contactsOnly?: boolean;
+  records: LeadRecord[];
+  onStatusChange: (id: string, status: LeadStatus) => void;
+  profile: ProfileDraft;
 }) {
   const [query, setQuery] = useState("");
-  const [selected, setSelected] = useState<
-    (typeof demoContacts)[number] | null
-  >(null);
-  const contacts = demoContacts.filter((contact) =>
-    `${contact.name} ${contact.company} ${contact.email}`
-      .toLowerCase()
-      .includes(query.toLowerCase()),
-  );
+  const [filter, setFilter] = useState<ContactFilter>("active");
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const selected = records.find((record) => record.id === selectedId) ?? null;
+  const contacts = filterContacts(records, query, filter);
   return (
     <div className="workspace-shell">
       <header className="workspace-header">
         <Brand />
         <div className="dashboard-account">
           <span className="demo-pill">DEMO</span>
-          <span className="mini-avatar">VM</span>
+          <span className="mini-avatar">{`${demoDraft.firstName.charAt(0)}${demoDraft.lastName.charAt(0)}`}</span>
           <div>
             <strong>
               {demoDraft.firstName} {demoDraft.lastName}
@@ -71,7 +80,10 @@ export function Dashboard({
             to="/contactos"
           >
             <Users size={17} />
-            Contactos<span className="nav-count">3</span>
+            Contactos
+            <span className="nav-count">
+              {records.filter((r) => r.status === "new").length}
+            </span>
           </Link>
           <Link className="workspace-nav" to="/p/valentina-mora">
             <Eye size={17} />
@@ -135,7 +147,7 @@ export function Dashboard({
                   },
                   {
                     label: "Nuevos contactos",
-                    value: demoMetrics.contacts,
+                    value: records.filter((r) => r.status === "new").length,
                     icon: Users,
                     note: "Nuevas conversaciones",
                   },
@@ -250,13 +262,45 @@ export function Dashboard({
                 )}
               </label>
             </div>
+            <div className="contact-management">
+              <label>
+                Mostrar
+                <select
+                  value={filter}
+                  onChange={(e) => setFilter(e.target.value as ContactFilter)}
+                >
+                  <option value="active">Activos</option>
+                  <option value="new">Nuevos</option>
+                  <option value="contacted">Atendidos</option>
+                  <option value="archived">Archivados</option>
+                  <option value="all">Todos</option>
+                </select>
+              </label>
+              <span>
+                {contacts.length} resultado{contacts.length === 1 ? "" : "s"}
+              </span>
+              <button
+                className="secondary-button"
+                disabled={!contacts.length}
+                onClick={() =>
+                  downloadFile(
+                    contactsToCsv(contacts),
+                    "one-card-contactos.csv",
+                    "text/csv;charset=utf-8",
+                  )
+                }
+              >
+                <Download size={14} />
+                Exportar CSV
+              </button>
+            </div>
             <div className="contact-table">
               {contacts.length ? (
                 contacts.map((contact) => (
                   <button
                     className="contact-row"
                     key={contact.id}
-                    onClick={() => setSelected(contact)}
+                    onClick={() => setSelectedId(contact.id)}
                   >
                     <span className="contact-person">
                       <span className="contact-avatar">{contact.initials}</span>
@@ -266,6 +310,15 @@ export function Dashboard({
                       </span>
                     </span>
                     <span className="contact-email">{contact.email}</span>
+                    <span className={`lead-status ${contact.status}`}>
+                      {
+                        {
+                          new: "Nuevo",
+                          contacted: "Atendido",
+                          archived: "Archivado",
+                        }[contact.status]
+                      }
+                    </span>
                     <span className="contact-date">{contact.date}</span>
                     <ArrowUpRight size={16} />
                   </button>
@@ -275,7 +328,13 @@ export function Dashboard({
                   <Search size={24} />
                   <h3>No encontramos coincidencias.</h3>
                   <p>Prueba con otro nombre, empresa o correo.</p>
-                  <button className="text-button" onClick={() => setQuery("")}>
+                  <button
+                    className="text-button"
+                    onClick={() => {
+                      setQuery("");
+                      setFilter("all");
+                    }}
+                  >
                     Mostrar todos los contactos
                   </button>
                 </div>
@@ -301,7 +360,10 @@ export function Dashboard({
         <span>Menos papel. Más posibilidades.</span>
       </footer>
       {selected && (
-        <Modal title="Una nueva conversación" onClose={() => setSelected(null)}>
+        <Modal
+          title="Una nueva conversación"
+          onClose={() => setSelectedId(null)}
+        >
           <div className="contact-detail">
             <span className="contact-avatar">{selected.initials}</span>
             <h3>{selected.name}</h3>
@@ -311,8 +373,43 @@ export function Dashboard({
               <Mail size={15} />
               {selected.email}
             </div>
+            <div className="lead-detail-actions">
+              <button
+                className="primary-button"
+                onClick={() =>
+                  onStatusChange(
+                    selected.id,
+                    selected.status === "contacted" ? "new" : "contacted",
+                  )
+                }
+              >
+                <CheckCircle2 size={15} />
+                {selected.status === "contacted"
+                  ? "Marcar como nuevo"
+                  : "Marcar como atendido"}
+              </button>
+              <button
+                className="secondary-button"
+                onClick={() =>
+                  onStatusChange(
+                    selected.id,
+                    selected.status === "archived" ? "new" : "archived",
+                  )
+                }
+              >
+                {selected.status === "archived" ? (
+                  <RotateCcw size={15} />
+                ) : (
+                  <Archive size={15} />
+                )}
+                {selected.status === "archived"
+                  ? "Restaurar contacto"
+                  : "Archivar"}
+              </button>
+            </div>
             <small>
-              Mensaje de demostración. No se enviará ninguna respuesta.
+              Los cambios de esta bandeja son de demostración y duran durante
+              esta sesión. No se envían respuestas.
             </small>
           </div>
         </Modal>

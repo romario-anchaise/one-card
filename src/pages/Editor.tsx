@@ -20,6 +20,7 @@ import type {
   ProfileDraft,
   ProfileStore,
   StoredProfile,
+  ProfileTextField,
 } from "../domain/workspace";
 import {
   createSlug,
@@ -28,12 +29,15 @@ import {
 } from "../application/workspace-services";
 import { downloadFile } from "../infrastructure/browser";
 import { Brand } from "../components/Brand";
+import { ProfileCustomization } from "../components/ProfileCustomization";
+import { PhysicalCard } from "../components/PhysicalCard";
+import { toProfessionalProfile } from "../application/workspace-services";
 
 const sections: {
   title: string;
   description: string;
   fields: {
-    key: keyof ProfileDraft;
+    key: ProfileTextField;
     label: string;
     placeholder: string;
     type?: string;
@@ -166,7 +170,7 @@ export function Editor({
     window.addEventListener("beforeunload", handler);
     return () => window.removeEventListener("beforeunload", handler);
   }, [dirty]);
-  function update(key: keyof ProfileDraft, value: string) {
+  function update(key: ProfileTextField, value: string) {
     setDraft((previous) => ({ ...previous, [key]: value }));
     setNotice("");
     setErrors((previous) => ({ ...previous, [key]: undefined }));
@@ -382,6 +386,31 @@ export function Editor({
           </div>
           <form onSubmit={submit} noValidate>
             <fieldset disabled={busy} className="editor-fields">
+              <details className="live-card-preview" open>
+                <summary>
+                  Vista previa en vivo
+                  <span>Los cambios se reflejan mientras escribes</span>
+                </summary>
+                <PhysicalCard profile={toProfessionalProfile(draft)} />
+              </details>
+              <ProfileCustomization
+                draft={draft}
+                onChange={(changes) => {
+                  setDraft((previous) => ({ ...previous, ...changes }));
+                  setNotice("");
+                }}
+                onImport={(value) => {
+                  setDraft({
+                    ...value,
+                    slug: store.mode === "demo" ? draft.slug : value.slug,
+                  });
+                  setErrors({});
+                  setNotice(
+                    "Respaldo cargado en el editor. Revisa los datos y guarda.",
+                  );
+                }}
+                error={errors.links}
+              />
               {sections.map((section) => (
                 <section className="editor-section" key={section.title}>
                   <div className="editor-section-title">
@@ -408,9 +437,19 @@ export function Editor({
                                   ? 2048
                                   : 100
                           }
-                          value={draft[field.key]}
+                          value={
+                            field.key === "avatarUrl" &&
+                            draft.avatarUrl.startsWith("data:")
+                              ? ""
+                              : draft[field.key]
+                          }
                           onChange={(e) => update(field.key, e.target.value)}
-                          placeholder={field.placeholder}
+                          placeholder={
+                            field.key === "avatarUrl" &&
+                            draft.avatarUrl.startsWith("data:")
+                              ? "Foto cargada desde tu equipo"
+                              : field.placeholder
+                          }
                           required={field.required}
                           aria-invalid={!!errors[field.key]}
                           aria-describedby={
@@ -485,7 +524,7 @@ export function Editor({
                     id="edit-slug"
                     value={draft.slug}
                     onChange={(e) => update("slug", e.target.value)}
-                    readOnly={store.mode === "cloud" && !!record}
+                    readOnly={store.mode !== "device" && !!record}
                     placeholder="Se generará a partir de tu nombre"
                     aria-invalid={!!errors.slug}
                     aria-describedby={errors.slug ? "error-slug" : "hint-slug"}

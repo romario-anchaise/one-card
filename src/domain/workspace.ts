@@ -1,4 +1,8 @@
-import type { ProfessionalProfile } from "./profile";
+import type {
+  ProfessionalProfile,
+  CardAppearance,
+  ProfileLink,
+} from "./profile";
 
 export interface ProfileDraft {
   id: string;
@@ -15,7 +19,10 @@ export interface ProfileDraft {
   linkedin: string;
   avatarUrl: string;
   expertise: string;
+  appearance?: CardAppearance;
+  links?: ProfileLink[];
 }
+export type ProfileTextField = Exclude<keyof ProfileDraft, "links">;
 
 export interface StoredProfile {
   draft: ProfileDraft;

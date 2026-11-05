@@ -175,7 +175,7 @@ export function ConnectionForm({
       <p className="privacy-note">
         <LockKeyhole size={12} />{" "}
         {demo
-          ? "Demostración: usa datos de prueba. No se enviarán ni guardarán."
+          ? "Usa datos de prueba. Solo se añadirán a la bandeja demo de esta sesión; no se envían a un servidor."
           : "Tus datos se comparten con el dueño de esta tarjeta para responder a tu solicitud."}
       </p>
     </form>

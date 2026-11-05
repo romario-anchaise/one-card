@@ -19,6 +19,7 @@ import { downloadFile } from "./infrastructure/browser";
 import { ProfileCard } from "./components/ProfileCard";
 import { PhysicalCard } from "./components/PhysicalCard";
 import { Modal } from "./components/Modal";
+import { downloadQrPng } from "./infrastructure/qr-download";
 export function App({
   profile,
   connectionGateway,
@@ -63,6 +64,28 @@ export function App({
         "one-card-qr.svg",
         "image/svg+xml",
       );
+  }
+  async function saveQrPng() {
+    try {
+      const svg = qrRef.current?.querySelector("svg");
+      if (svg) await downloadQrPng(svg);
+    } catch {
+      setNotice("No pudimos generar el PNG. Puedes descargar el QR en SVG.");
+    }
+  }
+  async function nativeShare() {
+    try {
+      if (navigator.share)
+        await navigator.share({
+          title: `${profile.name} · ONE CARD`,
+          text: "Conoce mi perfil profesional.",
+          url: shareUrl,
+        });
+      else await copyLink();
+    } catch (error) {
+      if (!(error instanceof DOMException && error.name === "AbortError"))
+        setNotice("No pudimos compartir. Puedes copiar el enlace.");
+    }
   }
   return (
     <>
@@ -245,9 +268,19 @@ export function App({
               {copied ? "Enlace copiado" : "Copiar enlace"}
             </button>
             <button className="secondary-button" onClick={downloadQr}>
-              Descargar QR
+              QR en SVG
+            </button>
+            <button className="secondary-button" onClick={saveQrPng}>
+              QR en PNG
             </button>
           </div>
+          <button
+            className="text-button native-share-button"
+            onClick={nativeShare}
+          >
+            Compartir desde mi dispositivo
+            <ArrowUpRight size={14} />
+          </button>
         </Modal>
       )}
       {modal === "physical" && (

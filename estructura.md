@@ -16,15 +16,19 @@ src/
   domain/
     profile.ts                        Perfil público, contactos y ConnectionGateway
     workspace.ts                      ProfileDraft, ProfileStore y AuthGateway
+    contact.ts                        Registro de contacto, estados y contrato remoto
   application/
     profile-services.ts               vCard, validación y envío mediante contrato
     workspace-services.ts             Borrador vacío, slug, URLs y transformación
+    contact-services.ts               Búsqueda, filtros y exportación CSV
     *.test.ts                         Pruebas de lógica y persistencia local
   infrastructure/
     demo-data.ts                      ÚNICO origen de personas y métricas de ejemplo
     demo-services.ts                  ProfileStore en memoria y envío simulado
     device-profile-store.ts           Borrador propio en localStorage
     browser.ts                        Descargas mediante Blob
+    photo.ts                          Preparación local de fotos
+    qr-download.ts                    Generación de QR en PNG
   pages/
     Welcome.tsx                       Inicio y accesos a recorridos
     Access.tsx                        Login, registro y recuperación
@@ -33,6 +37,7 @@ src/
   components/
     Brand.tsx                         Identidad visual y enlace al inicio
     ProfileCard.tsx                   Tarjeta reutilizable basada en props
+    ProfileCustomization.tsx          Foto, acabados, enlaces e importación
     PhysicalCard.tsx                  Tarjeta física negra fiel al prototipo
     ConnectionForm.tsx                Formulario y estados de envío
     Modal.tsx                         Diálogo nativo, Escape y foco confinado
@@ -40,6 +45,7 @@ src/
   workspace.css                       Inicio, acceso y editor
   demo.css                            Panel, contactos y animaciones
   reference.css                       Ajustes visuales fieles al prototipo R&A
+  functionality.css                   Controles de personalización y gestión
 ```
 
 ## Rutas de la demo
@@ -65,7 +71,7 @@ Editar la demo y recargar la página restaura los ejemplos. El borrador propio u
 
 ## Campos del perfil: contrato canónico
 
-`ProfileDraft` es el modelo de edición. Todos sus campos son cadenas; no enviar `null` para opcionales: usar `""`.
+`ProfileDraft` es el modelo de edición. Los campos de texto usan cadenas; para texto opcional vacío, usar `""`. `appearance` y `links` son extensiones opcionales compatibles con borradores anteriores.
 
 | Campo       | Uso                                 | Validación en frontend                                                  |
 | ----------- | ----------------------------------- | ----------------------------------------------------------------------- |
@@ -84,7 +90,7 @@ Editar la demo y recargar la página restaura los ejemplos. El borrador propio u
 | `avatarUrl` | Fotografía                          | Opcional, URL HTTPS, máximo 2048                                        |
 | `expertise` | Áreas de interés                    | Opcional, texto separado por comas, máximo 150                          |
 
-`toProfessionalProfile()` deriva nombre completo, iniciales, etiquetas y enlaces desde esos campos. No almacenar HTML ni aceptar URLs ejecutables en el servidor. Los canales vacíos se omiten. La foto se referencia por URL; no hay subida de archivos implementada.
+`toProfessionalProfile()` deriva nombre completo, iniciales, etiquetas y enlaces desde esos campos. No almacenar HTML ni aceptar URLs ejecutables en el servidor. Los canales vacíos se omiten. La foto puede ser una URL HTTPS o una imagen raster preparada en el navegador; todavía no se sube a un servidor.
 
 `StoredProfile` envuelve `{ draft, published, updatedAt }`. La fecha debe ser ISO 8601. `published` distingue un borrador de una publicación real; no convertir el guardado local en publicación.
 
@@ -121,7 +127,22 @@ Para Supabase futuro: usar su SDK en un adaptador, habilitar Google en el provee
 
 ### Métricas y bandeja
 
-`Dashboard.tsx` usa fixtures explícitos de `demo-data.ts`. Al integrar, sustituir esos imports por hooks/servicios que consuman el backend. **No están conectados a una API.** Los objetos de contacto contienen `id`, `name`, `initials`, `company`, `email`, `message`, `date`, `channel`; convertir `date` a una fecha ISO real en el DTO del backend y formatearla para la interfaz. Las métricas usan `views`, `contacts`, `linkClicks`, `weeklyViews`.
+`ProductApp.tsx` mantiene la bandeja de ejemplo en memoria e inyecta `records` y `onStatusChange` en `Dashboard.tsx`. El formulario de la tarjeta añade solicitudes a esta misma bandeja mediante `createDemoConnectionGateway`. **No se envían a una API y se pierden al recargar.** Los objetos de contacto contienen `id`, `name`, `initials`, `company`, `email`, `message`, `date`, `channel`, `status`; convertir `date` a una fecha ISO real en el DTO del backend. Las vistas y clics siguen siendo métricas ilustrativas de `demo-data.ts`; el contador de contactos nuevos se deriva de la bandeja de la sesión.
+
+### Funcionalidad adicional y nuevos puntos de integración
+
+- `ProfileCustomization.tsx`: elegir/quitar foto, acabado, añadir/editar/ordenar/quitar hasta seis enlaces e importar un respaldo. No importa contraseñas ni sesiones. La importación conserva el ID local y el slug fijo de la demo.
+- `photo.ts`: prepara JPG/PNG/WebP de hasta 5 MB en el navegador, recorta al centro y reduce a 512 × 512. Usa `avatarUrl` como data URL raster de hasta 750000 caracteres. El backend deberá sustituirla por una URL de almacenamiento después de subir y validar la imagen.
+- `appearance?: 'matte' | 'bamboo' | 'steel'`: acabado renderizado por `PhysicalCard` y acento del perfil. El valor por defecto es `matte`.
+- `links?: { id: string; label: string; url: string }[]`: recursos en el orden elegido, máximo seis; título de hasta 60 caracteres y URL HTTPS de hasta 2048. Se validan al guardar y se muestran en la tarjeta.
+- `Editor.tsx`: vista física en vivo, guardado y vista previa digital. Los cambios guardados en la demo actualizan también el nombre que muestra el panel.
+- `contact.ts`: `LeadRecord`, `LeadStatus` y contrato `ContactsGateway` para el adaptador futuro. Estados: `new`, `contacted`, `archived`. Archivar es reversible.
+- `contact-services.ts`: búsqueda sin distinguir tildes, filtros combinados y CSV con valores escapados y protección contra fórmulas de hoja de cálculo.
+- `Dashboard.tsx`: filtros, exportación del resultado actual, marcar atendido/nuevo, archivar/restaurar; estado gestionado por el padre para conservarlo entre pantallas.
+- `qr-download.ts` y `App.tsx`: descargar QR como PNG de 1024 × 1024 o SVG, copiar enlace y compartir mediante la función nativa del dispositivo cuando está disponible. El borrador sin publicar sigue sin ofrecer un enlace público ficticio.
+- `functionality.css`: controles y estados de estos recorridos, incluidos tamaños móviles.
+
+Para conectar el backend, sustituir las operaciones de memoria por el adaptador de contactos, guardar archivos en el almacenamiento elegido y devolver las mismas estructuras de dominio. El servidor debe validar propiedad, tipos, tamaño, URLs y permisos; las validaciones del navegador son solo experiencia de usuario.
 
 ## Criterios de organización
 

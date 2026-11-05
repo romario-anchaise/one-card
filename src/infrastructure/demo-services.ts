@@ -1,10 +1,14 @@
-import type { ConnectionGateway } from "../domain/profile";
-import type { ProfileStore, StoredProfile } from "../domain/workspace";
+import type { ConnectionGateway, ConnectionRequest } from "../domain/profile";
+import type {
+  ProfileStore,
+  StoredProfile,
+  ProfileDraft,
+} from "../domain/workspace";
 import {
   toProfessionalProfile,
   validateDraft,
 } from "../application/workspace-services";
-import { demoDraft, demoAvatarUrl } from "./demo-data";
+import { demoDraft } from "./demo-data";
 export const demoConnectionGateway: ConnectionGateway = {
   async send() {
     await new Promise((resolve) => setTimeout(resolve, 650));
@@ -15,7 +19,24 @@ export const demoConnectionGateway: ConnectionGateway = {
     };
   },
 };
-export function createDemoProfileStore(): ProfileStore {
+export function createDemoConnectionGateway(
+  onRequest: (profileId: string, request: ConnectionRequest) => void,
+): ConnectionGateway {
+  return {
+    async send(profileId, request) {
+      await new Promise((resolve) => setTimeout(resolve, 650));
+      onRequest(profileId, request);
+      return {
+        mode: "demo",
+        message:
+          "Solicitud añadida a la bandeja de ejemplo durante esta sesión. No se envió a ningún servidor.",
+      };
+    },
+  };
+}
+export function createDemoProfileStore(
+  onSaved?: (draft: ProfileDraft) => void,
+): ProfileStore {
   let record: StoredProfile = {
     draft: { ...demoDraft },
     published: false,
@@ -36,6 +57,7 @@ export function createDemoProfileStore(): ProfileStore {
         published: false,
         updatedAt: new Date().toISOString(),
       };
+      onSaved?.(structuredClone(draft));
       return structuredClone(record);
     },
     async publish() {
@@ -49,7 +71,6 @@ export function createDemoProfileStore(): ProfileStore {
       if (slug !== record.draft.slug) return null;
       return {
         ...toProfessionalProfile(record.draft),
-        avatarUrl: record.draft.avatarUrl || demoAvatarUrl,
         demo: true,
       };
     },

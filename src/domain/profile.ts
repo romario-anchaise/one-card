@@ -1,4 +1,10 @@
 export type ContactKind = "whatsapp" | "phone" | "email" | "linkedin";
+export type CardAppearance = "matte" | "bamboo" | "steel";
+export interface ProfileLink {
+  id: string;
+  label: string;
+  url: string;
+}
 export interface ContactLink {
   kind: ContactKind;
   label: string;
@@ -21,6 +27,8 @@ export interface ProfessionalProfile {
   expertise: readonly string[];
   contacts: readonly ContactLink[];
   demo: boolean;
+  appearance?: CardAppearance;
+  links?: readonly ProfileLink[];
 }
 export interface ConnectionRequest {
   name: string;

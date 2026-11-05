@@ -47,7 +47,7 @@ export function ProfileCard({
   const [failedImage, setFailedImage] = useState<string | null>(null);
   return (
     <article
-      className="profile-card reference-profile"
+      className={`profile-card reference-profile finish-${profile.appearance ?? "matte"}`}
       aria-label={`Tarjeta profesional de ${profile.name}`}
     >
       <div className="profile-utility-row">
@@ -124,6 +124,21 @@ export function ProfileCard({
           <UserRoundPlus size={16} />
           Guardar en Contactos (vCard)
         </button>
+        {!!profile.links?.length && (
+          <div className="profile-resource-links">
+            {profile.links.map((link) => (
+              <a
+                key={link.id}
+                href={link.url}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {link.label}
+                <ArrowUpRight size={14} />
+              </a>
+            ))}
+          </div>
+        )}
         {preview ? (
           <p className="preview-contact-note">
             El formulario de contacto estará disponible en tu tarjeta publicada.

@@ -10,15 +10,17 @@ import {
 } from "react-router-dom";
 import { ArrowLeft, CreditCard, LoaderCircle } from "lucide-react";
 import { App } from "./App";
-import type { ProfessionalProfile } from "./domain/profile";
+import type { ProfessionalProfile, ConnectionGateway } from "./domain/profile";
+import type { LeadRecord } from "./domain/contact";
 import type { ProfileStore } from "./domain/workspace";
 import { createDeviceProfileStore } from "./infrastructure/device-profile-store";
 import {
   createDemoProfileStore,
   demoConnectionGateway,
+  createDemoConnectionGateway,
 } from "./infrastructure/demo-services";
 import { toProfessionalProfile } from "./application/workspace-services";
-import { demoAvatarUrl } from "./infrastructure/demo-data";
+import { demoContacts, demoDraft } from "./infrastructure/demo-data";
 import { Welcome } from "./pages/Welcome";
 import { Access } from "./pages/Access";
 import { Editor } from "./pages/Editor";
@@ -49,7 +51,13 @@ function StatePage({
     </main>
   );
 }
-function PublicProfile({ store }: { store: ProfileStore }) {
+function PublicProfile({
+  store,
+  gateway,
+}: {
+  store: ProfileStore;
+  gateway: ConnectionGateway;
+}) {
   const { slug } = useParams();
   const [profile, setProfile] = useState<ProfessionalProfile | null>(null);
   const [loading, setLoading] = useState(true);
@@ -108,7 +116,7 @@ function PublicProfile({ store }: { store: ProfileStore }) {
         </Link>
         <span>INTERFAZ DE EJEMPLO · DATOS FICTICIOS</span>
       </div>
-      <App profile={profile} connectionGateway={demoConnectionGateway} />
+      <App profile={profile} connectionGateway={gateway} />
     </>
   );
 }
@@ -127,9 +135,6 @@ function Preview({ store }: { store: ProfileStore }) {
               ? {
                   ...toProfessionalProfile(value.draft),
                   demo: store.mode === "demo",
-                  avatarUrl:
-                    value.draft.avatarUrl ||
-                    (store.mode === "demo" ? demoAvatarUrl : undefined),
                 }
               : null,
           );
@@ -180,6 +185,38 @@ function ScrollToTop() {
   return null;
 }
 export function ProductApp() {
+  const [currentDemoDraft, setCurrentDemoDraft] = useState(() =>
+    structuredClone(demoDraft),
+  );
+  const [contacts, setContacts] = useState<LeadRecord[]>(() =>
+    structuredClone(demoContacts),
+  );
+  const connectionGateway = useMemo(
+    () =>
+      createDemoConnectionGateway((_profileId, request) => {
+        setContacts((previous) => [
+          {
+            id: crypto.randomUUID(),
+            name: request.name,
+            initials: request.name
+              .trim()
+              .split(/\s+/)
+              .map((part) => part.charAt(0))
+              .slice(0, 2)
+              .join("")
+              .toUpperCase(),
+            company: "Contacto de prueba",
+            email: request.email,
+            message: request.message,
+            date: "Ahora · sesión de demo",
+            channel: "Formulario",
+            status: "new",
+          },
+          ...previous,
+        ]);
+      }),
+    [],
+  );
   const device = useMemo(
     () =>
       createDeviceProfileStore({
@@ -188,14 +225,45 @@ export function ProductApp() {
       }),
     [],
   );
-  const demo = useMemo(() => createDemoProfileStore(), []);
+  const demo = useMemo(() => createDemoProfileStore(setCurrentDemoDraft), []);
   return (
     <HashRouter>
       <ScrollToTop />
       <Routes>
         <Route path="/" element={<Welcome />} />
-        <Route path="/panel" element={<Dashboard />} />
-        <Route path="/contactos" element={<Dashboard contactsOnly />} />
+        <Route
+          path="/panel"
+          element={
+            <Dashboard
+              profile={currentDemoDraft}
+              records={contacts}
+              onStatusChange={(id, status) =>
+                setContacts((previous) =>
+                  previous.map((record) =>
+                    record.id === id ? { ...record, status } : record,
+                  ),
+                )
+              }
+            />
+          }
+        />
+        <Route
+          path="/contactos"
+          element={
+            <Dashboard
+              contactsOnly
+              profile={currentDemoDraft}
+              records={contacts}
+              onStatusChange={(id, status) =>
+                setContacts((previous) =>
+                  previous.map((record) =>
+                    record.id === id ? { ...record, status } : record,
+                  ),
+                )
+              }
+            />
+          }
+        />
         <Route path="/acceso" element={<Access />} />
         <Route path="/registro" element={<Access mode="register" />} />
         <Route path="/recuperar-acceso" element={<Access mode="reset" />} />
@@ -210,7 +278,10 @@ export function ProductApp() {
         />
         <Route path="/vista-previa" element={<Preview store={device} />} />
         <Route path="/demo/vista-previa" element={<Preview store={demo} />} />
-        <Route path="/p/:slug" element={<PublicProfile store={demo} />} />
+        <Route
+          path="/p/:slug"
+          element={<PublicProfile store={demo} gateway={connectionGateway} />}
+        />
         <Route
           path="*"
           element={<StatePage title="No encontramos esta página." />}

@@ -1,5 +1,7 @@
 import type { ProfileDraft } from "../domain/workspace";
-export const demoAvatarUrl = "/demo-avatar.jpg";
+import type { LeadRecord } from "../domain/contact";
+export const demoAvatarUrl =
+  "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=200&h=200&fit=crop&crop=faces&q=85";
 /** Illustrative fixtures, never actual users, analytics, or contacts. */
 export const demoDraft: ProfileDraft = {
   id: "e5b9e38a-32ec-4b81-a674-5ebcbfd5c5db",
@@ -14,10 +16,10 @@ export const demoDraft: ProfileDraft = {
   phone: "+12025550148",
   whatsapp: "+12025550148",
   linkedin: "https://www.linkedin.com/",
-  avatarUrl: "",
+  avatarUrl: demoAvatarUrl,
   expertise: "Alianzas estratégicas, Brand experience, Networking",
 };
-export const demoContacts = [
+export const demoContacts: LeadRecord[] = [
   {
     id: "contact-1",
     name: "Andrés Rivera",
@@ -28,6 +30,7 @@ export const demoContacts = [
       "Me gustaría conversar sobre una colaboración para nuestro próximo proyecto.",
     date: "Hoy, 10:42",
     channel: "Formulario",
+    status: "new",
   },
   {
     id: "contact-2",
@@ -39,6 +42,7 @@ export const demoContacts = [
       "Un gusto conocerte. Sigamos en contacto para futuras oportunidades.",
     date: "Ayer, 16:20",
     channel: "Formulario",
+    status: "new",
   },
   {
     id: "contact-3",
@@ -49,8 +53,9 @@ export const demoContacts = [
     message: "Me interesa conocer más sobre las alianzas de Norte Atelier.",
     date: "Ayer, 09:15",
     channel: "Formulario",
+    status: "new",
   },
-] as const;
+];
 export const demoMetrics = {
   views: 124,
   contacts: 3,
