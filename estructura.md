@@ -2,7 +2,7 @@
 
 ## Alcance de esta entrega
 
-Frontend adaptable a móvil y computadora. Incluye tarjeta pública de ejemplo, inicio, login, registro, recuperación de acceso, panel, editor y contactos. **No contiene backend, cuentas reales, OAuth activo, métricas reales ni envíos reales.** Los datos ficticios están aislados en `src/infrastructure/demo-data.ts`.
+Frontend adaptable a móvil y computadora, publicado en Firebase Hosting y empaquetado para Android con Capacitor. Incluye tarjeta pública de ejemplo, inicio, login, registro, recuperación de acceso, panel, editor y contactos. La autenticación, las métricas y los envíos usan recorridos de demostración. Los datos de la demo están en `src/infrastructure/demo-data.ts`.
 
 Los retrasos en los adaptadores demo sirven para presentar los estados de carga. No son llamadas de red. El acceso demo no guarda contraseñas ni autentica usuarios. Google muestra un aviso hasta que se inyecte una implementación real de `AuthGateway`.
 
@@ -99,7 +99,7 @@ Editar la demo y recargar la página restaura los ejemplos. El borrador propio u
 
 `toProfessionalProfile()` deriva nombre completo, iniciales, etiquetas y enlaces desde esos campos. No almacenar HTML ni aceptar URLs ejecutables en el servidor. Los canales vacíos se omiten. La foto puede ser una URL HTTPS o una imagen raster preparada en el navegador; todavía no se sube a un servidor.
 
-Los contactos son enlaces nativos activos: `https://wa.me/`, `tel:`, `mailto:` y la URL de LinkedIn. No se interceptan por estar en modo demo. Abren el destino o la aplicación correspondiente; el visitante confirma allí cualquier llamada o envío. El perfil de ejemplo mantiene datos ficticios, que deben sustituirse en el editor para contactar a una persona real.
+Cuando el perfil tiene datos de contacto, los enlaces abren WhatsApp, el marcador, el correo o LinkedIn. La tarjeta de ejemplo muestra a Romario Anchaise, de Arequipa, Perú, con iniciales como avatar y los canales de contacto vacíos.
 
 `StoredProfile` envuelve `{ draft, published, updatedAt }`. La fecha debe ser ISO 8601. `published` distingue un borrador de una publicación real; no convertir el guardado local en publicación.
 
@@ -140,10 +140,10 @@ Para Supabase futuro: usar su SDK en un adaptador, habilitar Google en el provee
 
 ### Funcionalidad adicional y nuevos puntos de integración
 
-- `ProfileCustomization.tsx`: elegir/quitar foto, acabado, añadir/editar/ordenar/quitar hasta seis enlaces e importar un respaldo. No importa contraseñas ni sesiones. La importación conserva el ID local y el slug fijo de la demo.
+- `ProfileCustomization.tsx`: elegir o quitar foto, seleccionar acabado, añadir, editar, ordenar, ocultar o quitar hasta seis enlaces e importar un respaldo. La importación conserva el ID local y el slug fijo de la demo.
 - `photo.ts`: prepara JPG/PNG/WebP de hasta 5 MB en el navegador, recorta al centro y reduce a 512 × 512. Usa `avatarUrl` como data URL raster de hasta 750000 caracteres. El backend deberá sustituirla por una URL de almacenamiento después de subir y validar la imagen.
 - `appearance?: 'matte' | 'bamboo' | 'steel'`: acabado renderizado por `PhysicalCard` y acento del perfil. El valor por defecto es `matte`.
-- `links?: { id: string; label: string; url: string }[]`: recursos en el orden elegido, máximo seis; título de hasta 60 caracteres y URL HTTPS de hasta 2048. Se validan al guardar y se muestran en la tarjeta.
+- `links?: { id: string; label: string; url: string; hidden?: boolean }[]`: hasta seis recursos en el orden elegido, con título de hasta 60 caracteres y URL HTTPS de hasta 2048. Los enlaces ocultos se conservan en el borrador y se omiten en la tarjeta.
 - `Editor.tsx`: vista física en vivo, guardado y vista previa digital. Los cambios guardados en la demo actualizan también el nombre que muestra el panel.
 - `contact.ts`: `LeadRecord`, `LeadStatus` y contrato `ContactsGateway` para el adaptador futuro. Estados: `new`, `contacted`, `archived`. Archivar es reversible.
 - `contact-services.ts`: búsqueda sin distinguir tildes, filtros combinados y CSV con valores escapados y protección contra fórmulas de hoja de cálculo.
@@ -173,7 +173,7 @@ Paleta oscura con acentos dorados, componentes adaptables, botones táctiles, fo
 
 Los tiempos de simulación viven en `demo-services.ts`; las animaciones de entrada, gráfica y confirmación en `demo.css`. Los estados vacíos de búsqueda y perfil inexistente se pueden abrir navegando o buscando una cadena que no coincida.
 
-La tarjeta sigue la referencia visual de R&A: negro y dorado, foto centrada, canales de contacto, vCard blanca y formulario «Conectar de vuelta». `reference.css` contiene estos ajustes. `PhysicalCard` se reutiliza en escritorio y en el diálogo móvil. La fotografía ilustrativa está en `public/demo-avatar.jpg` ([fuente de imagen en Unsplash](https://images.unsplash.com/photo-1580489944761-15a19d654956)); no representa una cuenta real.
+La tarjeta sigue la referencia visual de R&A con negro y dorado, avatar centrado, canales de contacto cuando hay datos, botón de vCard y formulario «Conectar de vuelta». `reference.css` contiene estos ajustes. `PhysicalCard` se reutiliza en escritorio y en el diálogo móvil.
 
 ## Verificación y entrega
 
@@ -186,4 +186,16 @@ npm test
 npm run build
 ```
 
-La salida `dist/` es estática. `.openai/hosting.json` pertenece a la vista previa privada de Sites, no al backend del producto. Esta demo funciona en navegadores Android/iOS y escritorio; no es un APK ni una app Kotlin.
+`dist/` contiene la compilación web que publican `firebase.json` y `.firebaserc`. Las instrucciones están en [firebase-hosting.md](firebase-hosting.md). La tarjeta pública está en [Firebase Hosting](https://one-card-romario.web.app/#/p/romario-anchaise).
+
+`capacitor.config.ts` define el nombre, el identificador `com.romario.onecard` y la carpeta web `dist`. `android/` contiene el proyecto nativo de Capacitor, el manifiesto, los recursos y el Gradle Wrapper. En Android, el QR y el enlace para compartir apuntan a la tarjeta pública de Firebase.
+
+Con JDK 21 y Android SDK 36 configurados, ejecutar desde la raíz en Windows:
+
+```powershell
+npm run build
+npx cap sync android
+.\android\gradlew.bat -p android assembleDebug
+```
+
+El APK de prueba queda en `android/app/build/outputs/apk/debug/app-debug.apk`. La versión firmada para pruebas, compatible con Android 7.0 o superior, está en [GitHub Releases](https://github.com/romario-anchaise/one-card/releases/tag/v1.0-android-demo).
