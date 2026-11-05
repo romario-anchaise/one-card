@@ -44,11 +44,20 @@ Entorno: Chrome de escritorio, con tamaños móviles simulados. Código local de
 
 ## Pruebas automatizadas
 
-`npm test`: 18 casos aprobados en 4 archivos. Cubren vCard y escapado, campos opcionales vacíos, validación y consentimiento, persistencia local, personalización compatible con borradores anteriores, URLs y formatos de imagen permitidos, filtros y exportación CSV segura.
+`npm test`: 22 casos aprobados en 5 archivos. Cubren vCard y escapado, campos opcionales vacíos, validación y consentimiento, persistencia local, personalización compatible con borradores anteriores, URLs y formatos de imagen permitidos, filtros, exportación CSV segura y preferencias de apariencia.
 
 `npm run build`: compilación TypeScript y producción Vite.
 
 ## Pendientes y límites concretos
+
+### Modos claro, oscuro y automático
+
+- Modo claro aplicado en tarjeta pública, panel, editor y acceso; sin desbordamiento horizontal en la prueba móvil de 320 px.
+- Elección clara conservada después de recargar y al navegar entre pantallas.
+- Automático probado con `prefers-color-scheme` claro y oscuro emulados por Chrome; el documento respondió en ambos casos. La emulación fue retirada al terminar.
+- Campos del acceso móvil a 16 px; selector de apariencia accesible por teclado y opciones de radio identificadas.
+- El texto dorado de la cabecera del formulario tenía poco contraste sobre marfil; se corrigió a dorado oscuro. Los otros textos principales del perfil revisados por estilos computados superaron 4.5:1 en la comprobación puntual. Esto no constituye una auditoría completa de accesibilidad.
+- La preferencia visual no altera el perfil ni crea una sesión de autenticación.
 
 ### Revisión de tamaños de iPhone
 

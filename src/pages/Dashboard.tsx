@@ -15,7 +15,7 @@ import {
   Users,
   X,
 } from "lucide-react";
-import { Brand } from "../components/Brand";
+import { AppHeader } from "../components/AppHeader";
 import { Modal } from "../components/Modal";
 import type { LeadRecord, LeadStatus } from "../domain/contact";
 import type { ProfileDraft } from "../domain/workspace";
@@ -60,10 +60,9 @@ export function Dashboard({
   }
   return (
     <div className="workspace-shell minimal-workspace">
-      <header className="workspace-header">
-        <Brand />
+      <AppHeader className="workspace-header">
         <span className="demo-pill">DEMO</span>
-      </header>
+      </AppHeader>
       <div className="workspace-layout">
         <aside className="workspace-sidebar">
           <Link

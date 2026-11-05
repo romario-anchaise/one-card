@@ -36,7 +36,11 @@ function StatePage({
   loading?: boolean;
 }) {
   return (
-    <main className="state-page">
+    <main
+      className="state-page"
+      role={loading ? "status" : undefined}
+      aria-live={loading ? "polite" : undefined}
+    >
       {loading ? (
         <LoaderCircle className="spin" size={32} />
       ) : (

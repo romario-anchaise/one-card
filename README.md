@@ -6,6 +6,8 @@ Consulta **[estructura.md](estructura.md)** para localizar archivos, rutas, camp
 
 Consulta **[pruebas.md](pruebas.md)** para los resultados de la prueba funcional en Chrome y los pendientes reales.
 
+Consulta **[entrega-frontend.md](entrega-frontend.md)** para separar la revisión visual de la integración que realizará Gerardo. La apariencia se cambia desde el icono de la cabecera: claro, oscuro o automático; la elección queda guardada en el navegador.
+
 ## Ejecutar
 
 Node.js 22.12+ o 24 LTS.

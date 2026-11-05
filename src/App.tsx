@@ -7,7 +7,7 @@ import { downloadFile } from "./infrastructure/browser";
 import { downloadQrPng } from "./infrastructure/qr-download";
 import { ProfileCard } from "./components/ProfileCard";
 import { PhysicalCard } from "./components/PhysicalCard";
-import { Brand } from "./components/Brand";
+import { AppHeader } from "./components/AppHeader";
 import { Modal } from "./components/Modal";
 export function App({
   profile,
@@ -92,9 +92,7 @@ export function App({
         Ir al perfil
       </a>
       <div className="page-shell reference-theme minimal-public">
-        <header className="minimal-header">
-          <Brand />
-        </header>
+        <AppHeader className="minimal-header" />
         <main className="minimal-profile-layout">
           <aside className="physical-showcase">
             <PhysicalCard profile={profile} />

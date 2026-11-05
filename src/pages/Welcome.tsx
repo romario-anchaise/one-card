@@ -1,15 +1,14 @@
 import { ArrowRight } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Brand } from "../components/Brand";
+import { AppHeader } from "../components/AppHeader";
 export function Welcome() {
   return (
     <div className="page-shell minimal-welcome">
-      <header className="site-header">
-        <Brand />
+      <AppHeader className="site-header">
         <Link className="header-account" to="/acceso">
           Iniciar sesión
         </Link>
-      </header>
+      </AppHeader>
       <main>
         <h1>
           Tu tarjeta.

@@ -21,6 +21,7 @@ src/
     profile-services.ts               vCard, validación y envío mediante contrato
     workspace-services.ts             Borrador vacío, slug, URLs y transformación
     contact-services.ts               Búsqueda, filtros y exportación CSV
+    theme.ts                          Preferencia visual y resolución automática
     *.test.ts                         Pruebas de lógica y persistencia local
   infrastructure/
     demo-data.ts                      ÚNICO origen de personas y métricas de ejemplo
@@ -36,6 +37,9 @@ src/
     Editor.tsx                        Edición, validación y guardado del perfil
   components/
     Brand.tsx                         Identidad visual y enlace al inicio
+    AppHeader.tsx                     Cabecera común a tarjeta, editor y acceso
+    ThemeProvider.tsx                 Estado de apariencia y persistencia local
+    ThemeControl.tsx                  Selector claro/oscuro/automático
     ProfileCard.tsx                   Tarjeta reutilizable basada en props
     ProfileCustomization.tsx          Foto, acabados, enlaces e importación
     PhysicalCard.tsx                  Tarjeta física negra fiel al prototipo
@@ -46,6 +50,7 @@ src/
   demo.css                            Panel, contactos y animaciones
   reference.css                       Ajustes visuales fieles al prototipo R&A
   functionality.css                   Controles de personalización y gestión
+  themes.css                          Paleta clara y control de apariencia
 ```
 
 ## Rutas de la demo
@@ -157,6 +162,10 @@ Para conectar el backend, sustituir las operaciones de memoria por el adaptador 
 No se han añadido clases, herencia ni una capa por cada función solo para aparentar SOLID. Los contratos pequeños representan necesidades reales de la interfaz.
 
 ## Diseño y accesibilidad
+
+El usuario puede elegir claro, oscuro o automático desde el icono de apariencia de cada cabecera. `ThemeProvider` guarda la preferencia en `localStorage` bajo `one-card.ui.theme`, sin modificar el perfil ni depender del backend. El valor inicial es oscuro; automático responde a `prefers-color-scheme` y a sus cambios. La preferencia se restaura antes del montaje de React, se sincroniza entre pestañas del mismo origen y sigue funcionando durante la sesión si el almacenamiento está bloqueado.
+
+`themes.css` usa `data-theme` en el elemento `html` para cambiar superficies, texto, campos y diálogos. El acabado físico de la tarjeta (`appearance`) es independiente de la apariencia de la interfaz: una tarjeta negra mate sigue siendo negra en modo claro. Los nuevos estados de carga se anuncian con `role="status"`.
 
 Paleta oscura con acentos dorados, componentes adaptables, botones táctiles, foco visible, etiquetas, errores asociados, diálogos con teclado y animaciones reducidas cuando el sistema lo pide. Las fuentes externas tienen alternativas del sistema.
 

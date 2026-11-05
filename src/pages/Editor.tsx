@@ -28,7 +28,7 @@ import {
   validateDraft,
 } from "../application/workspace-services";
 import { downloadFile } from "../infrastructure/browser";
-import { Brand } from "../components/Brand";
+import { AppHeader } from "../components/AppHeader";
 import { Modal } from "../components/Modal";
 import { ProfileCustomization } from "../components/ProfileCustomization";
 import { PhysicalCard } from "../components/PhysicalCard";
@@ -288,8 +288,7 @@ export function Editor({
           </div>
         </Modal>
       )}
-      <header className="workspace-header">
-        <Brand />
+      <AppHeader className="workspace-header">
         <div className="workspace-header-actions">
           <span className="workspace-status">
             {store.mode === "device" ? (
@@ -310,7 +309,7 @@ export function Editor({
             </button>
           )}
         </div>
-      </header>
+      </AppHeader>
       <div className="workspace-layout">
         <aside className="workspace-sidebar">
           <Link className="workspace-nav" to="/panel">

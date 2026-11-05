@@ -9,7 +9,7 @@ import {
   LockKeyhole,
 } from "lucide-react";
 import { Link } from "react-router-dom";
-import { Brand } from "../components/Brand";
+import { AppHeader } from "../components/AppHeader";
 import type { AuthGateway } from "../domain/workspace";
 export function Access({
   auth = null,
@@ -75,13 +75,12 @@ export function Access({
   }[mode];
   return (
     <div className="access-shell">
-      <header>
-        <Brand />
+      <AppHeader>
         <Link className="back-link" to="/">
           <ArrowLeft size={14} />
           Volver
         </Link>
-      </header>
+      </AppHeader>
       <main className="access-card reveal">
         <h1>{title}</h1>
         {!auth && (
