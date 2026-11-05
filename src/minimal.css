@@ -134,6 +134,7 @@
 }
 .minimal-welcome .welcome-secondary {
   margin: 22px 0 32px;
+  flex-wrap: wrap;
 }
 .minimal-welcome small {
   color: #9c8eaa;
@@ -345,7 +346,7 @@
   .minimal-welcome .welcome-secondary {
     justify-content: flex-start;
     font-size: 11px;
-    gap: 28px;
+    gap: 0 18px;
   }
   .minimal-workspace .workspace-header {
     height: 65px;

@@ -5,11 +5,7 @@ import { demoDraft } from "../infrastructure/demo-data";
 export function Welcome() {
   return (
     <div className="page-shell minimal-welcome">
-      <AppHeader className="site-header">
-        <Link className="header-account" to="/acceso">
-          Iniciar sesión
-        </Link>
-      </AppHeader>
+      <AppHeader className="site-header" />
       <main>
         <h1>
           Tu tarjeta.
@@ -17,11 +13,12 @@ export function Welcome() {
           <span>Tu identidad.</span>
         </h1>
         <p>Comparte tu perfil profesional en un toque.</p>
-        <Link className="primary-button" to="/panel">
-          Abrir panel
+        <Link className="primary-button" to="/acceso">
+          Iniciar sesión
           <ArrowRight size={17} />
         </Link>
         <div className="welcome-secondary">
+          <Link to="/panel">Explorar panel demo</Link>
           <Link to={`/p/${demoDraft.slug}`}>Ver ejemplo</Link>
           <Link to="/editar">Crear tarjeta</Link>
         </div>
