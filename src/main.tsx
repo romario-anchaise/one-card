@@ -1,16 +1,11 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import { App } from "./App";
-import {
-  demoConnectionGateway,
-  profileRepository,
-} from "./infrastructure/demo";
+import { ProductApp } from "./ProductApp";
 import "./styles.css";
+import "./workspace.css";
+import "./demo.css";
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
-    <App
-      repository={profileRepository}
-      connectionGateway={demoConnectionGateway}
-    />
+    <ProductApp />
   </StrictMode>,
 );

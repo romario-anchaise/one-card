@@ -29,12 +29,14 @@ export function ProfileCard({
   onSave,
   onShare,
   onContact,
+  preview = false,
 }: {
   profile: ProfessionalProfile;
   gateway: ConnectionGateway;
   onSave: () => void;
   onShare: () => void;
   onContact: () => void;
+  preview?: boolean;
 }) {
   return (
     <article
@@ -44,16 +46,29 @@ export function ProfileCard({
       <div className="card-cover">
         <div className="cover-grain" />
         <span className="atelier-logo">
-          norte<span>ATELIER</span>
+          {profile.company || "ONE CARD"}
+          <span>PERFIL PROFESIONAL</span>
         </span>
-        <span className="cover-mark">N</span>
+        <span className="cover-mark">
+          {(profile.company || profile.firstName).charAt(0)}
+        </span>
         <span className="cover-tag">PEOPLE. IDEAS. POSSIBILITIES.</span>
       </div>
       <div className="profile-content">
         <div className="profile-topline">
           <div className="avatar" aria-label={`Avatar de ${profile.name}`}>
-            {profile.initials}
-            <span className="availability" title="Perfil de demostración" />
+            {profile.avatarUrl ? (
+              <img
+                src={profile.avatarUrl}
+                alt=""
+                referrerPolicy="no-referrer"
+                onError={(e) => {
+                  e.currentTarget.style.display = "none";
+                }}
+              />
+            ) : (
+              profile.initials
+            )}
           </div>
           <div className="profile-tools">
             <button
@@ -137,7 +152,18 @@ export function ProfileCard({
           <Radio size={15} />
           <span />
         </div>
-        <ConnectionForm gateway={gateway} profileId={profile.id} />
+        {preview ? (
+          <p className="preview-contact-note">
+            El formulario de contacto estará disponible en tu tarjeta publicada.
+          </p>
+        ) : (
+          <ConnectionForm
+            gateway={gateway}
+            profileId={profile.id}
+            recipientName={profile.firstName}
+            demo={profile.demo}
+          />
+        )}
         <div className="card-footer">
           <span>Una conexión. Infinitas posibilidades.</span>
           <span className="small-wordmark">

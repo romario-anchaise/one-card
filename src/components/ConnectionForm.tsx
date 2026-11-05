@@ -5,9 +5,13 @@ import { connect, validateConnection } from "../application/profile-services";
 export function ConnectionForm({
   gateway,
   profileId,
+  recipientName,
+  demo = false,
 }: {
   gateway: ConnectionGateway;
   profileId: string;
+  recipientName: string;
+  demo?: boolean;
 }) {
   const [values, setValues] = useState<ConnectionRequest>({
     name: "",
@@ -148,12 +152,14 @@ export function ConnectionForm({
         disabled={pending}
         type="submit"
       >
-        {pending ? "Validando…" : "Conectar con Valentina"}
+        {pending ? "Enviando…" : `Conectar con ${recipientName}`}
         <ArrowUpRight size={18} />
       </button>
       <p className="privacy-note">
-        <LockKeyhole size={12} /> Demo: el formulario valida tus datos, sin
-        enviarlos ni guardarlos.
+        <LockKeyhole size={12} />{" "}
+        {demo
+          ? "Demostración: usa datos de prueba. No se enviarán ni guardarán."
+          : "Tus datos se comparten con el dueño de esta tarjeta para responder a tu solicitud."}
       </p>
     </form>
   );

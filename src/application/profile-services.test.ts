@@ -1,10 +1,16 @@
 import { describe, expect, it } from "vitest";
 import { connect, createVCard, validateConnection } from "./profile-services";
-import { profileRepository } from "../infrastructure/demo";
+import { emptyDraft, toProfessionalProfile } from "./workspace-services";
 describe("vCard export", () => {
   it("escapes reserved characters and line breaks to prevent property injection", () => {
     const card = createVCard({
-      ...profileRepository.getPublicProfile(),
+      ...toProfessionalProfile({
+        ...emptyDraft(),
+        firstName: "Ana",
+        lastName: "Sol",
+        role: "Diseñadora",
+        slug: "ana-sol",
+      }),
       name: "Ana; Sol, Pérez\nTEL:injected",
       company: "A\\B",
     });

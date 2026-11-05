@@ -6,6 +6,7 @@ export interface ContactLink {
 }
 export interface ProfessionalProfile {
   id: string;
+  slug?: string;
   name: string;
   firstName: string;
   lastName: string;
@@ -13,6 +14,7 @@ export interface ProfessionalProfile {
   company: string;
   location: string;
   initials: string;
+  avatarUrl?: string;
   email: string;
   phone: string;
   bio: string;
@@ -35,7 +37,4 @@ export interface ConnectionGateway {
     profileId: string,
     request: ConnectionRequest,
   ): Promise<ConnectionReceipt>;
-}
-export interface ProfileRepository {
-  getPublicProfile(): ProfessionalProfile;
 }

@@ -14,32 +14,33 @@ import {
   X,
 } from "lucide-react";
 import { QRCodeSVG } from "qrcode.react";
-import type { ConnectionGateway, ProfileRepository } from "./domain/profile";
+import type { ConnectionGateway, ProfessionalProfile } from "./domain/profile";
 import { createVCard } from "./application/profile-services";
 import { downloadFile } from "./infrastructure/browser";
 import { ProfileCard } from "./components/ProfileCard";
 import { Modal } from "./components/Modal";
 export function App({
-  repository,
+  profile,
   connectionGateway,
+  preview = false,
 }: {
-  repository: ProfileRepository;
+  profile: ProfessionalProfile;
   connectionGateway: ConnectionGateway;
+  preview?: boolean;
 }) {
-  const profile = repository.getPublicProfile();
   const [modal, setModal] = useState<"share" | "about" | null>(null);
   const [notice, setNotice] = useState("");
   const [copied, setCopied] = useState(false);
   const qrRef = useRef<HTMLDivElement>(null);
-  const shareUrl = window.location.href.split("#")[0];
+  const shareUrl = `${window.location.origin}${window.location.pathname}#/p/${encodeURIComponent(profile.slug ?? profile.id)}`;
   function saveContact() {
     downloadFile(
       createVCard(profile),
-      "valentina-mora-demo.vcf",
+      `${profile.id}.vcf`,
       "text/vcard;charset=utf-8",
     );
     setNotice(
-      "Contacto de ejemplo descargado. Contiene datos de demostración.",
+      profile.demo ? "Contacto de ejemplo descargado." : "Contacto descargado.",
     );
   }
   async function copyLink() {
@@ -63,12 +64,20 @@ export function App({
   }
   return (
     <>
-      <a className="skip-link" href="#perfil">
+      <a
+        className="skip-link"
+        href="#perfil"
+        onClick={(e) => {
+          e.preventDefault();
+          document.getElementById("perfil")?.focus();
+          document.getElementById("perfil")?.scrollIntoView();
+        }}
+      >
         Ir a la tarjeta
       </a>
       <div className="page-shell">
         <header className="site-header">
-          <a className="brand" href="#" aria-label="ONE CARD, inicio">
+          <a className="brand" href="#/" aria-label="ONE CARD, inicio">
             <span className="brand-icon">
               <CreditCard size={20} />
             </span>
@@ -77,7 +86,11 @@ export function App({
           <div className="header-right">
             <span className="demo-badge">
               <span />
-              PERFIL DEMO
+              {preview
+                ? "VISTA PREVIA"
+                : profile.demo
+                  ? "PERFIL DEMO"
+                  : "PERFIL PROFESIONAL"}
             </span>
             <button className="header-link" onClick={() => setModal("about")}>
               Conoce ONE CARD
@@ -106,12 +119,17 @@ export function App({
                 <br className="desktop-break" /> dar el siguiente paso, en un
                 solo lugar.
               </p>
-              <a className="intro-cta" href="#perfil">
-                Conoce a Valentina{" "}
+              <button
+                className="intro-cta"
+                onClick={() =>
+                  document.getElementById("perfil")?.scrollIntoView()
+                }
+              >
+                Conoce a {profile.firstName}{" "}
                 <span>
                   <ArrowDown size={16} />
                 </span>
-              </a>
+              </button>
               <div className="physical-scene" aria-hidden="true">
                 <div className="physical-shadow" />
                 <div className="physical-card">
@@ -125,7 +143,8 @@ export function App({
                     <span />
                   </div>
                   <div className="physical-name">
-                    Valentina Mora<span>NORTE ATELIER</span>
+                    {profile.name}
+                    <span>{profile.company}</span>
                   </div>
                   <div className="physical-bottom">
                     <span>YOUR NEXT CONNECTION.</span>
@@ -153,7 +172,7 @@ export function App({
               <span>Tu identidad, siempre contigo.</span>
             </div>
           </aside>
-          <section id="perfil" className="profile-column">
+          <section id="perfil" className="profile-column" tabIndex={-1}>
             <div className="profile-caption">
               <span>
                 <span className="status-dot" />
@@ -167,8 +186,15 @@ export function App({
             <ProfileCard
               profile={profile}
               gateway={connectionGateway}
+              preview={preview}
               onSave={saveContact}
               onShare={() => {
+                if (preview) {
+                  setNotice(
+                    "Esta es una vista previa. Publica tu tarjeta en la nube para compartirla.",
+                  );
+                  return;
+                }
                 setCopied(false);
                 setModal("share");
               }}
@@ -261,9 +287,8 @@ export function App({
             </p>
             <p>
               <ShieldCheck />
-              Esta primera versión es una demostración de la tarjeta pública. La
-              gestión de cuentas y el envío de contactos se incorporarán en la
-              siguiente etapa.
+              Comparte solo los datos que quieras hacer públicos. Los borradores
+              guardados en este dispositivo no son perfiles publicados.
             </p>
           </div>
           <button className="primary-button" onClick={() => setModal(null)}>
